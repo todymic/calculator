@@ -3,9 +3,9 @@
 namespace Tests\Mock;
 
 use App\Model\Expression;
-use App\Model\Stack;
+use App\Model\Stack as BaseStack;
 
-class StackMock extends Stack
+class Stack extends BaseStack
 {
     /**
      * @return Expression[]

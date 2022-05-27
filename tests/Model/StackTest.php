@@ -4,15 +4,15 @@ namespace Tests\Model;
 
 use App\Model\Number;
 use PHPUnit\Framework\TestCase;
-use Tests\Mock\StackMock;
+use Tests\Mock\Stack;
 
 class StackTest extends TestCase
 {
-    private StackMock $stack;
+    private Stack $stack;
 
     protected function setUp(): void
     {
-        $this->stack = new StackMock();
+        $this->stack = new Stack();
     }
 
     public function testPush(): void
