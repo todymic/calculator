@@ -2,26 +2,18 @@
 
 namespace Tests;
 
-use App\Calculator;
-use App\Model\Number;
-use App\Model\Operator\Addition;
 use App\Model\Parser\OperatorParser;
 use App\Model\Stack;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\Mock\CalculatorMockTest;
+use Tests\Mock\Calculator;
 
 class CalculatorTest extends TestCase
 {
     /**
-     * @var Calculator|mixed
      */
-    public $calculator;
-    /**
-     * @var CalculatorMockTest|mixed
-     */
-    public $calculatorMock;
+    public Calculator $calculator;
 
     /**
      * @return array<int, array<string[]|string>>
@@ -31,8 +23,8 @@ class CalculatorTest extends TestCase
         return [
             ['1+2', ['1', '+', '2']],
             ['1 + 2 * 3', ['1', '+', '2', '*', '3']],
-            ['-1 + 2 * 3', ['-', '1', '+', '2', '*', '3']],
-            ['1-2/0.4', ['1', '-', '2', '/', '0.4']],
+            ['-1 + 2 * 3', ['-1', '+', '2', '*', '3']],
+            ['1 - 2 / 0.4', ['1', '-', '2', '/', '0.4']],
         ];
     }
 
@@ -41,28 +33,35 @@ class CalculatorTest extends TestCase
         $request = new Request();
         $request->request->set('input', '1+2');
 
-        $parser               = new OperatorParser();
-        $this->calculator     = new Calculator($request, $parser);
-        $this->calculatorMock = new CalculatorMockTest($request, $parser);
+        $parser           = new OperatorParser();
+        $this->calculator = new Calculator($request, $parser);
     }
 
-	/**
-	 * @depends testFormatedOutput
-	 * @return void
-	 */
+    /**
+     * @depends testFormatedOutput
+     */
     public function testRun(): void
     {
         $this->assertInstanceOf(JsonResponse::class, $this->calculator->run());
     }
 
-	/**
-	 * @depends testTokenize
-	 * @return void
-	 */
+    /**
+     * @depends testTokenize
+     */
     public function testFormatedOutput(): void
     {
-        $output = $this->calculatorMock->getFormatedOutput('1+2');
+		/** @var \Tests\Mock\Stack $output */
+        $output = $this->calculator->getFormatedOutput('1+2');
         $this->assertInstanceOf(Stack::class, $output);
+
+		$this->assertEquals('+', $output->getData());
+
+	    $output->pop();
+		$this->assertEquals('2', $output->poke()->render());
+
+	    $output->pop();
+		$this->assertEquals('1', $output->poke()->render());
+
     }
 
     /**
@@ -72,6 +71,6 @@ class CalculatorTest extends TestCase
      */
     public function testTokenize(string $input, array $expected): void
     {
-        $this->assertEquals($expected, $this->calculatorMock->tokenize($input));
+        $this->assertEquals($expected, $this->calculator->tokenize($input));
     }
 }
