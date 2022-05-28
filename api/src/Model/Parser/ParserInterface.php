@@ -2,8 +2,7 @@
 
 namespace App\Model\Parser;
 
-use App\Model\Expression;
-use App\Model\Operator\Operator;
+use App\Model\Expression\Operator\Operator;
 use App\Model\Stack;
 
 interface ParserInterface

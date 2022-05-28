@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Model;
+namespace App\Model\Expression;
+
+use App\Model\Stack;
 
 class Number extends Expression
 {

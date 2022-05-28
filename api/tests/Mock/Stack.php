@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Mock;
+namespace App\Tests\Mock;
 
-use App\Model\Expression;
+use App\Model\Expression\Expression;
 use App\Model\Stack as BaseStack;
 
 class Stack extends BaseStack

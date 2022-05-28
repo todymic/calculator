@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\Model\Operator;
+namespace App\Tests\Model\Operator;
 
-use App\Model\Number;
-use App\Model\Operator\Addition;
-use App\Model\Operator\Division;
-use App\Model\Operator\Multiplication;
-use App\Model\Operator\Operator;
-use App\Model\Operator\Subtraction;
+use App\Model\Expression\Number;
+use App\Model\Expression\Operator\Addition;
+use App\Model\Expression\Operator\Division;
+use App\Model\Expression\Operator\Multiplication;
+use App\Model\Expression\Operator\Operator;
+use App\Model\Expression\Operator\Subtraction;
 use PHPUnit\Framework\TestCase;
-use Tests\Mock\Stack;
+use App\Tests\Mock\Stack;
 
 class OperatorTest extends TestCase
 {

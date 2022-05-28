@@ -2,11 +2,11 @@
 
 namespace App\Model\Parser;
 
-use App\Model\Operator\Addition;
-use App\Model\Operator\Division;
-use App\Model\Operator\Multiplication;
-use App\Model\Operator\Subtraction;
-use Tests\Mock\Stack;
+use App\Model\Expression\Operator\Addition;
+use App\Model\Expression\Operator\Division;
+use App\Model\Expression\Operator\Multiplication;
+use App\Model\Expression\Operator\Subtraction;
+use App\Tests\Mock\Stack;
 use PHPUnit\Framework\TestCase;
 
 class OperatorParserTest extends TestCase

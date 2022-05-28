@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Model\Operator;
+namespace App\Model\Expression\Operator;
 
-use App\Model\Expression;
+use App\Model\Expression\Expression;
 
 abstract class Operator extends Expression
 {

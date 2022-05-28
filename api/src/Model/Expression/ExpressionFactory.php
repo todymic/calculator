@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Model;
+namespace App\Model\Expression;
 
-use App\Model\Operator\Addition;
-use App\Model\Operator\Division;
-use App\Model\Operator\Multiplication;
-use App\Model\Operator\Subtraction;
+use App\Exception\InvalidExpressionValueException;
+use App\Model\Expression\Operator\Addition;
+use App\Model\Expression\Operator\Division;
+use App\Model\Expression\Operator\Multiplication;
+use App\Model\Expression\Operator\Subtraction;
 use Exception;
 
 class ExpressionFactory
@@ -27,6 +28,6 @@ class ExpressionFactory
             return new Division();
         }
 
-        throw new Exception('Incorrect Value ' . $value);
+        throw new InvalidExpressionValueException('Incorrect Value ' . $value);
     }
 }

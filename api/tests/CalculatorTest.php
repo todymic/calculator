@@ -1,17 +1,17 @@
 <?php
 
-namespace Tests;
+namespace App\Tests;
 
-use App\Model\Number;
-use App\Model\Operator\Addition;
-use App\Model\Operator\Division;
-use App\Model\Operator\Multiplication;
+use App\Model\Expression\Number;
+use App\Model\Expression\Operator\Addition;
+use App\Model\Expression\Operator\Division;
+use App\Model\Expression\Operator\Multiplication;
 use App\Model\Parser\OperatorParser;
 use App\Model\Stack;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\Mock\Calculator;
+use App\Tests\Mock\Calculator;
 
 class CalculatorTest extends TestCase
 {
@@ -38,15 +38,15 @@ class CalculatorTest extends TestCase
         $request->request->set('input', '1+2');
 
         $parser           = new OperatorParser();
-        $this->calculator = new Calculator($request, $parser);
+        $this->calculator = new Calculator($parser);
     }
 
     /**
      * @depends testFormatedOutput
      */
-    public function testRun(): void
+    public function testExecute(): void
     {
-        $this->assertInstanceOf(JsonResponse::class, $this->calculator->run());
+        $this->assertEquals('3', $this->calculator->execute('1+2'));
     }
 
     /**
@@ -54,11 +54,11 @@ class CalculatorTest extends TestCase
      */
     public function testFormatedOutput(): void
     {
-		/** @var \Tests\Mock\Stack $output */
-        $output = $this->calculator->getFormatedOutput('1+2');
+		/** @var Stack $output */
+        $output = $this->calculator->getBaseFormatedOutput('1+2');
         $this->assertInstanceOf(Stack::class, $output);
 
-		$this->assertEquals('+', $output->getData());
+		$this->assertEquals('+', $output->poke()->render());
 
 	    $output->pop();
 		$this->assertEquals('2', $output->poke()->render());

@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use App\Model\Expression\Expression;
+
 class Stack
 {
     /**

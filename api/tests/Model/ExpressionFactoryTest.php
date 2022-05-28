@@ -2,12 +2,13 @@
 
 namespace Model;
 
-use App\Model\ExpressionFactory;
-use App\Model\Number;
-use App\Model\Operator\Addition;
-use App\Model\Operator\Division;
-use App\Model\Operator\Multiplication;
-use App\Model\Operator\Subtraction;
+use App\Exception\InvalidExpressionValueException;
+use App\Model\Expression\ExpressionFactory;
+use App\Model\Expression\Number;
+use App\Model\Expression\Operator\Addition;
+use App\Model\Expression\Operator\Division;
+use App\Model\Expression\Operator\Multiplication;
+use App\Model\Expression\Operator\Subtraction;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
@@ -45,7 +46,7 @@ class ExpressionFactoryTest extends TestCase
 
     public function testFailedCreatedExpression(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidExpressionValueException::class);
         $this->expectErrorMessage('Incorrect Value test');
         $this->expressionFactory::create('test');
     }

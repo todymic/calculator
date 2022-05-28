@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Model;
+namespace App\Tests\Model;
 
-use App\Model\Number;
+use App\Model\Expression\Number;
 use PHPUnit\Framework\TestCase;
-use Tests\Mock\Stack;
+use App\Tests\Mock\Stack;
 
 class NumberTest extends TestCase
 {

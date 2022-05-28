@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Mock;
+namespace App\Tests\Mock;
 
-use App\Calculator as BaseCalculator;
+use App\Manager\Calculator as BaseCalculator;
 use App\Model\Stack;
 
 class Calculator extends BaseCalculator
 {
-    public function getFormatedOutput(string $string): Stack
+    public function getBaseFormatedOutput(string $string): Stack
     {
         return parent::getFormatedOutput($string);
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model\Operator;
+namespace App\Model\Expression\Operator;
 
 use App\Model\Stack;
 use DivisionByZeroError;
