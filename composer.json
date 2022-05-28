@@ -1,6 +1,6 @@
 {
-  "name": "vendor_name/calculator",
-  "description": "description",
+  "name": "app/calculator",
+  "description": "build an calculator",
   "minimum-stability": "stable",
   "license": "proprietary",
   "authors": [
