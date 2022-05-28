@@ -1,6 +1,7 @@
 <?php
 
 use App\Calculator;
+use App\Model\Parser\OperatorParser;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -10,8 +11,10 @@ $request = Request::createFromGlobals();
 
 Debug::enable();
 
-$application = new Calculator();
 
-$response = $application->handle($request);
+$calculator = new Calculator($request, new OperatorParser());
+
+$response = $calculator->run();
 
 $response->send();
+
