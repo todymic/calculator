@@ -2,6 +2,10 @@
 
 namespace Tests;
 
+use App\Model\Number;
+use App\Model\Operator\Addition;
+use App\Model\Operator\Division;
+use App\Model\Operator\Multiplication;
 use App\Model\Parser\OperatorParser;
 use App\Model\Stack;
 use PHPUnit\Framework\TestCase;
@@ -73,4 +77,23 @@ class CalculatorTest extends TestCase
     {
         $this->assertEquals($expected, $this->calculator->tokenize($input));
     }
+
+	/*
+	 * input Stack : [3 4 2 * 3 / +]
+	 *
+	 * result after RPN read: 7
+	 */
+	public function testReadRPNOutput()
+	{
+		$stack = new Stack();
+		$stack->push(new Number('3'));
+		$stack->push(new Number('4'));
+		$stack->push(new Number('2'));
+		$stack->push(new Multiplication());
+		$stack->push(new Number('2'));
+		$stack->push(new Division());
+		$stack->push(new Addition());
+
+		$this->assertEquals('7', $this->calculator->readRPNOutput($stack));
+	}
 }

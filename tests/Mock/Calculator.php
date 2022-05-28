@@ -19,4 +19,10 @@ class Calculator extends BaseCalculator
     {
         return parent::tokenize($string);
     }
+
+	public function readRPNOutput(Stack $stack): string
+	{
+		return parent::readRPNOutput($stack);
+
+	}
 }
