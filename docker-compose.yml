@@ -2,13 +2,16 @@ version: "3.9"
 
 services:
     nginx:
-        image: nginx:latest
+        build:
+            context: .
+            dockerfile: docker/nginx/Dockerfile
         volumes:
-            - ./:/var/www/html
+            - ./api:/var/www/api
             - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
         ports:
             -   "8080:80"
         depends_on:
+            - php_fpm
             - ui
         networks:
             - monitoring
@@ -16,9 +19,9 @@ services:
     php_fpm:
         build:
             context: .
-            dockerfile: docker/php/dockerfile
+            dockerfile: docker/php/Dockerfile
         volumes:
-            - ./:/var/www/html
+            - ./api:/var/www/api
         networks:
             - monitoring
 
@@ -32,9 +35,6 @@ services:
             - ${PWD}/ui:/var/www/ui
         ports:
             - "3000:3000"
-
-volumes:
-    nodemodules: {}
 
 networks:
     monitoring:

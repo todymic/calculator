@@ -4,7 +4,7 @@ FROM node:current-alpine3.14
 # and is not intended for production use
 WORKDIR /var/www/ui
 
-COPY ./../../ui/package.json /var/www/ui/
+COPY ../../ui/package.json /var/www/ui/
 
 RUN yarn install
 

@@ -17,5 +17,5 @@ RUN apt-get update && \
 
 RUN php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/local/bin --filename=composer --2 && chmod +x /usr/local/bin/composer
 
-COPY . /var/www/html
-WORKDIR /var/www/html
+COPY . /var/www/api
+WORKDIR /var/www/api
