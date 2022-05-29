@@ -1,0 +1,13 @@
+.button-box {
+    display: table;
+    margin-top: 8px;
+    z-index: 2;
+    position: relative;
+    width: 100%;
+}
+
+.button-box .button-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
