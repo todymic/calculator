@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Manager;
 
 use App\Model\Expression\Number;
 use App\Model\Expression\Operator\Addition;
@@ -8,18 +8,21 @@ use App\Model\Expression\Operator\Division;
 use App\Model\Expression\Operator\Multiplication;
 use App\Model\Parser\OperatorParser;
 use App\Model\Stack;
+use App\Tests\Mock\ExpressionFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Tests\Mock\Calculator;
 
 class CalculatorTest extends TestCase
 {
-    /**
-     */
+
     public Calculator $calculator;
 
-    /**
+	private MockObject|OperatorParser $parser;
+	private MockObject|ExpressionFactory $expressionFactory;
+
+	/**
      * @return array<int, array<string[]|string>>
      */
     public function inputProvider(): array
@@ -37,8 +40,9 @@ class CalculatorTest extends TestCase
         $request = new Request();
         $request->request->set('input', '1+2');
 
-        $parser           = new OperatorParser();
-        $this->calculator = new Calculator($parser);
+		$this->parser = $this->createMock(OperatorParser::class);
+
+        $this->calculator = new Calculator($this->parser);
     }
 
     /**
@@ -54,17 +58,21 @@ class CalculatorTest extends TestCase
      */
     public function testFormatedOutput(): void
     {
-		/** @var Stack $output */
-        $output = $this->calculator->getBaseFormatedOutput('1+2');
+	    $output = new Stack();
+	    $operators = new Stack();
+
+		$argParse = clone $output;
+		$argParse->push(new Number('1'));
+
+		$this->parser->expects($this->any())
+			->method('parse')
+			->with(new Addition(), $argParse, $operators);
+
+		$output = $this->calculator->getBaseFormatedOutput('1+2');
+
         $this->assertInstanceOf(Stack::class, $output);
 
-		$this->assertEquals('+', $output->poke()->render());
 
-	    $output->pop();
-		$this->assertEquals('2', $output->poke()->render());
-
-	    $output->pop();
-		$this->assertEquals('1', $output->poke()->render());
 
     }
 
