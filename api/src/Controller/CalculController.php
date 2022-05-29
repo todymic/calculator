@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CalculController extends AbstractController
 {
-    #[Route('/calcul', name: 'app_calcul')]
+    #[Route('/calcul', name: 'app_calcul', methods: 'POST')]
     public function index(Request $request, Calculator $calculator): JsonResponse
     {
 	    $input = '';
