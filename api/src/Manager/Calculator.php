@@ -86,7 +86,7 @@ class Calculator
 	 */
 	protected function tokenize(string $string): array
 	{
-		$parts = preg_split('((-?\d*\.?\d+|\+|\-|\(|\)|\*|\/)|\s+)', $string, null, \PREG_SPLIT_NO_EMPTY | \PREG_SPLIT_DELIM_CAPTURE);
+		$parts = preg_split('((-?\d*\.?\d+|\+|\-|\(|\)|\*|\/)|\s+)', $string, 0, \PREG_SPLIT_NO_EMPTY | \PREG_SPLIT_DELIM_CAPTURE);
 		return array_map('trim', $parts);
 	}
 }
