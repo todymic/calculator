@@ -16,9 +16,6 @@ class Division extends Operator
         $left = $stack->pop()->operate($stack);
         $right = $stack->pop()->operate($stack);
 
-        if ($left === 0) {
-            throw new DivisionByZeroError();
-        }
         return $right / $left;
     }
 
