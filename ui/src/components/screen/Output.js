@@ -1,9 +1,14 @@
 import './Output.css';
 
-const Output = ({result}) => {
+const Output = ({result, memo}) => {
+    let outputText = ''
+    if(memo !== '') {
+         outputText = memo + ' = ' + result
+    }
+
     return <div className="output-wrapper">
         <span className='output-span'>
-            {result}
+            {outputText}
         </span>
     </div>
 }
