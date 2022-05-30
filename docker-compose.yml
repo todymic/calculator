@@ -22,7 +22,6 @@ services:
             dockerfile: docker/php/Dockerfile
         volumes:
             - ./api:/var/www/api
-        command: composer install --ignore-platform-reqs
         networks:
             - monitoring
 
