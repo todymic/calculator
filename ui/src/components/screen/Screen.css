@@ -1,0 +1,9 @@
+.screen {
+    width: 98.5%;
+    height: 72px;
+    border: 1px solid #ebebeb;
+    border-radius: 8px;
+    margin: auto;
+    padding: 10px 14px 0 10px;
+    box-sizing: border-box;
+}

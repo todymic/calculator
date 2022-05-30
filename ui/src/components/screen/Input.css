@@ -1,0 +1,24 @@
+.input-wrapper {
+    -webkit-transition: line-height 0.2s;
+    display: table;
+    font-size: 30px;
+    height: 32px;
+    vertical-align: bottom;
+    position: relative;
+    table-layout: fixed;
+    width: 100%;
+    z-index: 0;
+
+}
+
+.input-div {
+    display: table-row;
+}
+
+.input-span {
+    -webkit-user-select: text;
+    color: unset;
+    float: right;
+    font-family: arial,sans-serif;
+    white-space: nowrap;
+}
