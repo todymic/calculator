@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Model\Operator;
+namespace App\Tests\Model\Expression\Operator;
 
 use App\Model\Expression\Number;
 use App\Model\Expression\Operator\Addition;

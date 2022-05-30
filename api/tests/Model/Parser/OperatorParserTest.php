@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model\Parser;
+namespace App\Tests\Model\Parser;
 
 use App\Model\Expression\Operator\Addition;
 use App\Model\Expression\Operator\Division;

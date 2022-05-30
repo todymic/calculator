@@ -12,11 +12,12 @@ Application de calculator.
 
 Cloner le repository git.
 
-Dans un terminal, aller dans le dossier cloné et taper la commande suivante :
+Dans un terminal, taper la commande suivante :
 
 ```shell
 cd calculator
-docker-compose up -d 
+docker-compose up -d --build
+
 ```
 
 Une fois la commande exécutée, si tout s'est bien passé, 3 conteneurs sont montés :
@@ -27,33 +28,3 @@ Une fois la commande exécutée, si tout s'est bien passé, 3 conteneurs sont mo
 Pour accéder au front : http://localhost:3000
 
 Pour accéder au Back: POST http://localhost:8080/api/calcul
-
-### Détails des conteneurs
-#### calculator_nginx
-Serveur web.
-
-Pour les logs :
-```shell
-docker logs -f calculator-nginx-1
-```
-### calculator_php_fpm
-Serveur applicatif php
-
-Pour les logs php :
-```shell
-docker logs -f calculator-php_fpm-1
-```
-### calculator_ui
-Serveur applicatif php
-
-Pour les logs php :
-```shell
-docker logs -f calculator-ui-1
-```
-
-### Destruction des containers
-Pour détruire les containers, ouvrir un terminal. Aller dans le dossier du repo et taper la commande suivante
-
-```shell
-docker-compose down -v
-```
