@@ -51,12 +51,6 @@ Pour les logs php :
 docker logs -f calculator-ui-1
 ```
 
-Pour les logs applicatif :
-```shell
-tail -f var/logs/*
-```
-
-
 ### Destruction des containers
 Pour détruire les containers, ouvrir un terminal. Aller dans le dossier du repo et taper la commande suivante
 
