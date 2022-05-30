@@ -26,7 +26,7 @@ Une fois la commande exécutée, si tout s'est bien passé, 3 conteneurs sont mo
 
 Pour accéder au front : http://localhost:3000
 
-Pour accéder au Back (via Postman): http://localhost:8080
+Pour accéder au Back: POST http://localhost:8080/api/calcul
 
 ### Détails des conteneurs
 #### calculator_nginx
