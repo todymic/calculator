@@ -26,7 +26,7 @@ Une fois la commande exécutée, si tout s'est bien passé, 3 conteneurs sont mo
 
 Pour accéder au front : http://localhost:3000
 
-Pour accéder au Back (via Postman): http://localhost:8080
+Pour accéder au Back: POST http://localhost:8080/api/calcul
 
 ### Détails des conteneurs
 #### calculator_nginx
@@ -50,12 +50,6 @@ Pour les logs php :
 ```shell
 docker logs -f calculator-ui-1
 ```
-
-Pour les logs applicatif :
-```shell
-tail -f var/logs/*
-```
-
 
 ### Destruction des containers
 Pour détruire les containers, ouvrir un terminal. Aller dans le dossier du repo et taper la commande suivante
