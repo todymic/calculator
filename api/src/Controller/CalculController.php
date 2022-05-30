@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Throwable;
 use App\Manager\Calculator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,7 +20,7 @@ class CalculController extends AbstractController
 	    try {
 
 			if($content = $request->getContent()) {
-				$input = json_decode($content, true);
+				$input = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 			}
 
 		    $result = $calculator->execute($input['input']);
@@ -28,7 +29,7 @@ class CalculController extends AbstractController
 		        'result' => $result,
 	        ]);
 
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
 
 		    return $this->json([
 			    'error' => $e->getMessage(),

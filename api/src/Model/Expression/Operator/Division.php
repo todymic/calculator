@@ -16,6 +16,13 @@ class Division extends Operator
         $left = $stack->pop()->operate($stack);
         $right = $stack->pop()->operate($stack);
 
+		if($left == '0') {
+			$errorMessage = $right == '0' ? 'Error' : 'Infinity';
+
+			throw new DivisionByZeroError($errorMessage);
+
+		}
+
         return $right / $left;
     }
 
