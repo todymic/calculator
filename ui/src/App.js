@@ -30,6 +30,7 @@ class App extends Component {
 
         this.isEqualClicked = false; // flag for equal
         this.isDotClicked = false; // flag for '.' btn
+        this.isError = false;
 
     }
 
@@ -43,7 +44,9 @@ class App extends Component {
 
         this.changeClearBtnLabel('CE');
 
-        if (!this.operator.includes(this.state.input.slice(-1))
+        console.log('**'+this.state.input.trim()+'**')
+        if (this.state.input.trim() !== '.'
+            && !this.operator.includes(this.state.input.slice(-1))
             && this.state.input.search('Infinity') === -1
             && !this.isEqualClicked
         ) {
@@ -68,11 +71,15 @@ class App extends Component {
                             this.setState({
                                 input: result.result
                             })
+
+                            this.isError = false;
                         } else {
 
                             this.setState({
                                 input: result.error
                             })
+
+                            this.isError = true;
                         }
 
                         this.setState({
@@ -100,6 +107,24 @@ class App extends Component {
                 this.setState({
                     ans: this.state.input
                 });
+
+                this.setState({
+                    result: ''
+                })
+            } else {
+                if(this.state.input.trim() === '.') {
+                    this.setState({
+                        result: ''
+                    })
+
+                    this.setState({
+                        ans: this.state.input
+                    });
+
+                    this.setState({
+                        input: 'Error'
+                    })
+                }
             }
 
         }
@@ -115,8 +140,10 @@ class App extends Component {
                 ans: 'Ans'
             });
 
+            let input = this.state.input === 'Error' ? '0' : this.state.input;
+
             this.setState({
-                result: this.state.input
+                result: input
             })
         }
 
@@ -146,9 +173,11 @@ class App extends Component {
                 // If the two last letters are '-.', it will be a negative float number
                 let space = ' ';
 
+
                 if (this.isNumber(lastLetter)
                     || lastLetter === '.'
                     || lastLetter === '-.'
+                    || oldInput === '-'
                     || (this.operator.includes(beforeLastLetter) && lastLetter === '-')) // NEG num
                 {
                     space = ''
@@ -218,6 +247,7 @@ class App extends Component {
     onClickOperator(value) {
 
         this.changeClearBtnLabel('CE');
+
         this.putCalcInMemo();
 
         let oldInput = this.state.input ? this.state.input : '0';
@@ -253,6 +283,14 @@ class App extends Component {
 
         }
 
+        if(this.state.input === 'Error') {
+            if(value !== '-') {
+                newInput = '0 ' + value;
+            } else {
+                newInput = value;
+            }
+
+        }
         this.setState({
             input: newInput
         });
