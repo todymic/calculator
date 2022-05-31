@@ -3,17 +3,29 @@
     width: 100%;
     height: 20px;
     color: #70757a;
-    display: table;
     font-size: 13px;
     position: relative;
-    table-layout: fixed;
+    text-align: right;
+    padding-top: 3px;
 }
 
 .output-span {
-    width: 100%;
-    text-align: right;
     font-family: arial,sans-serif;
-    float: right;
+    display: inline-block;
     white-space: nowrap;
-    margin-top: 3px;
+}
+.output-span.scaled {
+    animation: zoom-in 0.4s;
+    transform-origin: right;
+}
+
+@keyframes zoom-in{
+    0% {
+        transform: scale(2);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }

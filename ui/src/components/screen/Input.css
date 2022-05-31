@@ -22,3 +22,16 @@
     font-family: arial,sans-serif;
     white-space: nowrap;
 }
+
+.input-span.translated {
+    animation: translate-top 0.3s;
+}
+
+@keyframes translate-top{
+    0% {
+        transform: translateX(0) translateY(30px) translateZ(0);
+    }
+    100% {
+        transform: translateZ(0);
+    }
+}

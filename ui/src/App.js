@@ -1,5 +1,5 @@
 import './App.css';
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import Wrapper from './components/wrapper/Wrapper';
 import ScreenBox from "./components/screen/Screen";
 import Output from "./components/screen/Output";
@@ -8,6 +8,20 @@ import ButtonBox from "./components/Button/ButtonBox";
 import Button from "./components/Button/Button";
 
 
+// const Appa = () => {
+//     const [result, setResult] = useState('');
+//     const [input, setInput] = useState(0);
+//     const pad = [];
+//
+//     const clicEqual = (input) => {
+//         setResult(input);
+//     };
+//
+//     return (
+//         <p>{result}</p>
+//     );
+// }
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -15,7 +29,8 @@ class App extends Component {
             result: '',
             input: 0,
             ans: '',
-            clearBtn: 'AC'
+            clearBtn: 'AC',
+            resultChanged: false
         };
         this.pad = [
             ['(', ')', '%', 'AC'],
@@ -39,6 +54,8 @@ class App extends Component {
     onClickEqual() {
 
         this.changeClearBtnLabel('CE');
+
+        this.setState({resultChanged: false});
 
         if (this.state.input.trim() !== '.'
             && !this.operator.includes(this.state.input.slice(-1))
@@ -109,6 +126,10 @@ class App extends Component {
 
 
         this.isDotClicked = false;
+
+        setTimeout(() => {
+            this.setState({resultChanged: true});
+        });
     }
 
     changeStateResult(result, ans, input) {
@@ -339,8 +360,8 @@ class App extends Component {
             <div className="App">
                 <Wrapper>
                     <ScreenBox>
-                        <Output result={this.state.result} memo={this.state.ans}/>
-                        <Input input={this.state.input}/>
+                        <Output result={this.state.result} memo={this.state.ans} animate={this.state.resultChanged}/>
+                        <Input input={this.state.input} animate={this.state.resultChanged}/>
                     </ScreenBox>
                     <ButtonBox>
                         {this.pad.map((row, i) => {
