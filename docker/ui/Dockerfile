@@ -1,13 +1,14 @@
-FROM node:current-alpine3.14
+FROM node:alpine
 
-USER node
-
-COPY --chown=node:node ./ui /var/www/ui
 WORKDIR /var/www/ui
 
 COPY ./ui/package.json /var/www/ui/
 
 RUN yarn install
 
-RUN yarn run build
+COPY --chown=node:node ./ui /var/www/ui
+
+RUN mkdir -p /var/www/ui/node_modules && chmod -R 777 /var/www/ui/node_modules
+USER node
+
 CMD yarn start

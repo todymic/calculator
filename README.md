@@ -23,15 +23,19 @@ Une fois la commande exécutée, si tout s'est bien passé, 3 conteneurs sont mo
 * php_fpm
 * ui
 
-
 3. Lancer l'API en executant la commande suivante :
 ```shell
-docker exec -it calculator-php_fpm-1 /bin/bash -c "composer install"
+docker exec -it calculator_php_fpm_1 /bin/bash -c "composer install"
 ```
-
-Pour accéder au front : http://localhost:3000
-
 Pour accéder au Back: POST http://localhost:8080/api/calcul
+
+
+4. Lancer le Front en executant les commandes suivantes :
+```shell
+ cd ui
+ yarn install
+```
+Pour accéder au front : http://localhost:3000
 
 ## Tests
 

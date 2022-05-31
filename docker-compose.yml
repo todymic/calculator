@@ -33,8 +33,7 @@ services:
         networks:
             - monitoring
         volumes:
-            - ./ui:/var/www/ui
-            - nodemodules:/var/www/ui/node_modules
+            - ${PWD}/ui:/var/www/ui:delegated
         ports:
             - "3000:3000"
 
