@@ -1,5 +1,5 @@
 import './App.css';
-import React, {Component, useState} from 'react';
+import React, {useState} from 'react';
 import Wrapper from './components/wrapper/Wrapper';
 import ScreenBox from "./components/screen/Screen";
 import Output from "./components/screen/Output";
@@ -8,227 +8,186 @@ import ButtonBox from "./components/Button/ButtonBox";
 import Button from "./components/Button/Button";
 
 
-// const Appa = () => {
-//     const [result, setResult] = useState('');
-//     const [input, setInput] = useState(0);
-//     const pad = [];
-//
-//     const clicEqual = (input) => {
-//         setResult(input);
-//     };
-//
-//     return (
-//         <p>{result}</p>
-//     );
-// }
+const App = () => {
+    const [result, setResult] = useState('');
+    const [input, setInput] = useState('0');
+    const [ans, setAns] = useState('');
+    const [clearBtn, setClearBtn] = useState('AC');
+    const [resultChanged, setResultChanged] = useState(false);
+    const [isDotClicked, setIsDotClicked] = useState(false);
+    const [isEqualClicked, setIsEqualClicked] = useState(false);
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            result: '',
-            input: 0,
-            ans: '',
-            clearBtn: 'AC',
-            resultChanged: false
-        };
-        this.pad = [
-            ['(', ')', '%', 'AC'],
-            ['7', '8', '9', '÷'],
-            ['4', '5', '6', '×'],
-            ['1', '2', '3', '-'],
-            ['0', '.', '=', '+'],
-        ];
-        this.operator = ['+', '-', '×', '÷'];
-        this.sign = ['%', '(', ')', 'AC', 'CE'];
-        this.ACCE = ['AC', 'CE'];
+    const pad = [
+        ['(', ')', '%', 'AC'],
+        ['7', '8', '9', '÷'],
+        ['4', '5', '6', '×'],
+        ['1', '2', '3', '-'],
+        ['0', '.', '=', '+'],
+    ];
 
-        this.isEqualClicked = false; // flag for equal
-        this.isDotClicked = false; // flag for '.' btn
+    const operator = ['+', '-', '×', '÷'];
+    const sign = ['%', '(', ')', 'AC', 'CE'];
+    const ACCE = ['AC', 'CE'];
 
-    }
+    const onClickEqual = () => {
 
-    componentDidMount() {
-    }
+        setClearBtn('CE');
 
-    onClickEqual() {
+        setResultChanged(false);
 
-        this.changeClearBtnLabel('CE');
-
-        this.setState({resultChanged: false});
-
-        if (this.state.input.trim() !== '.'
-            && !this.operator.includes(this.state.input.slice(-1))
-            && this.state.input.search('Infinity') === -1
-            && !this.isEqualClicked
+        if (input.trim() !== '.'
+            && !operator.includes(input.slice(-1))
+            && input.search('Infinity') === -1
+            && !isEqualClicked
         ) {
             // construct the url of the API call
             const url = `${process.env.REACT_APP_API_URL}/calcul`;
 
-            const input = this.state.input.replace(/\×/g, '*').replace(/\÷/g, '/').replace(/\. /g, '.0 ');
+            const formattedInput = input.replace(/×/g, '*').replace(/÷/g, '/').replace(/\. /g, '.0 ');
 
             // if Infinity, don't call the API
             fetch(url, {
                 method: 'POST',
-                body: JSON.stringify({'input': input})
+                body: JSON.stringify({'input': formattedInput})
             })
                 .then(res => res.json())
                 .then(
                     (result) => {
 
-                        const input = this.state.input.replace(/\*/g, '×').replace(/\//g, '÷').replace(/\.0 /g, '. ');
+                        const inputResult = input.replace(/\*/g, '×').replace(/\//g, '÷').replace(/\.0 /g, '. ');
 
                         if (result.result) {
 
-                            this.setState({
-                                input: result.result
-                            })
-
-                            this.isError = false;
+                            setInput(result.result);
                         } else {
-
-                            this.setState({
-                                input: result.error
-                            })
-
-                            this.isError = true;
+                            setInput('Error');
                         }
 
-                        this.setState({
-                            result: ''
-                        })
+                        setResult('')
+                        setAns(inputResult)
+                        setClearBtn('AC')
 
-                        this.setState({
-                            ans: input
+                        setTimeout(() => {
+                            setResultChanged(true);
                         });
-
-                        this.changeClearBtnLabel('AC');
                     }
                 )
 
-            this.isEqualClicked = true;
+            setIsEqualClicked(true);
 
         } else {
 
-            if (this.state.input.search('Infinity') > -1) {
-
-                this.changeStateResult('', this.state.input, 'Infinity')
-
+            if (input.search('Infinity') > -1) {
+                changeStateResult('', input, 'Infinity')
             } else {
-                if (this.state.input.trim() === '.') {
-
-                    this.changeStateResult('', this.state.input, 'Error')
-
+                if (input.trim() === '.') {
+                    changeStateResult('', input, 'Error')
                 }
             }
 
-        }
-
-
-        this.isDotClicked = false;
-
-        setTimeout(() => {
-            this.setState({resultChanged: true});
-        });
-    }
-
-    changeStateResult(result, ans, input) {
-        this.setState({
-            result: result
-        })
-
-        this.setState({
-            ans: ans
-        });
-
-        this.setState({
-            input: input
-        })
-    }
-
-    putCalcInMemo() {
-
-        if (this.isEqualClicked) {
-            this.setState({
-                ans: 'Ans'
+            setTimeout(() => {
+                setResultChanged(true);
             });
+        }
 
-            let input = this.state.input === 'Error' ? '0' : this.state.input;
+        setIsDotClicked(false);
 
-            this.setState({
-                result: input
-            })
+    };
+
+    const changeStateResult = (resultArg, ansArg, inputArg) => {
+        setResult(resultArg)
+
+        setAns(ansArg);
+
+        setInput(inputArg)
+    }
+
+    const putCalcInMemo = () => {
+
+        if (isEqualClicked) {
+            setAns('Ans');
+
+            let newInput = input === 'Error' ? '0' : input;
+
+            setResult(newInput)
         }
 
     }
 
+    const onClickPad = (value) => {
 
-    onClickPad(value) {
+        if (!sign.includes(value)) {
 
-        if (!this.sign.includes(value)) {
+            putCalcInMemo();
 
-            this.putCalcInMemo();
+            setClearBtn('CE');
 
-            this.changeClearBtnLabel('CE');
+            let oldInput = input ? input : '0';
 
-            let oldInput = this.state.input ? this.state.input : '0';
+            let newInput = value;
 
-            let input = value;
-
-            if (oldInput !== '0' && !this.isEqualClicked) // reset input screen after click on equal OR
+            if (oldInput !== '0' && !isEqualClicked) // reset input screen after click on equal OR
             {
                 const letters = oldInput.split(' ');
                 const lastLetter = letters[letters.length - 1];
                 const beforeLastLetter = letters[letters.length - 2];
 
-                // If the last letter is a [0-9] || '.' , remove new Input without space between them,
-                // Or if the two last letters are '* -' or '/ -' , the new input will be a negative number => add input after sign without space
-                // If the two last letters are '-.', it will be a negative float number
+
                 let space = ' ';
 
+                // exemple input: 4 x 0 ===> lastLetter = 0 and input's length = 3
+                if(letters.length > 1 && lastLetter === '0') {
 
-                if (this.isNumber(lastLetter)
-                    || lastLetter === '.'
-                    || lastLetter === '-.'
-                    || oldInput === '-'
-                    || (this.operator.includes(beforeLastLetter) && lastLetter === '-')) // NEG num
-                {
-                    space = ''
+                    if(value === '0') { // don't repeat 0 if it's at the beginning of input
+                        newInput = oldInput;
+                    } else {
+                        // replace the 0 with the value :
+                        // eg : input= '3 x 0' and value = 1,  3 x 0 ===> 3 x 1
+                        letters.pop()
+                        newInput = letters.join(' ') + space + value;
+                    }
+
+                } else {
+
+                    // no space for a negative OR float number OR integer
+                    if (isNumber(lastLetter)
+                        || lastLetter === '.'
+                        || oldInput === '-'
+                        || (operator.includes(beforeLastLetter) && lastLetter === '-')) // NEG num
+                    {
+                        space = ''
+                    }
+
+                    newInput = oldInput + space + value;
                 }
 
-                input = oldInput + space + value;
 
                 // it's already a float number, put the flag ON to prevent another .
                 if (lastLetter.indexOf('.') > -1) {
-                    this.state.isDotClicked = true;
+                    setIsDotClicked(true);
                 }
             }
 
-            this.setState({
-                input: input
-            })
-
+            setInput(newInput)
 
         } else {
             // nothing to do for parentheis and percentage
-            this.isDotClicked = false;
+            setIsDotClicked(false);
         }
 
-        this.isEqualClicked = false;
+        setIsEqualClicked(false);
 
     }
 
-    onClickClearBtn(value) {
+    const onClickClearBtn = (value) => {
 
         if (value === 'AC') { //reset button
-            this.putCalcInMemo()
+            putCalcInMemo()
 
-            this.setState({
-                input: 0
-            })
+            setInput('0')
         } else {
 
-            let oldInput = this.state.input ? this.state.input : '0';
+            let oldInput = input ? input : '0';
             let letters = oldInput.split('');
             const beforeLastLetter = letters[letters.length - 2];
 
@@ -244,35 +203,26 @@ class App extends Component {
                 newInput = '0';
             }
 
-            this.setState({
-                input: newInput
-            })
+            setInput(newInput)
 
         }
     }
 
-    changeClearBtnLabel(value) {
-        this.setState({
-            clearBtn: value
-        })
-    }
+    const onClickOperator = (value) => {
+        setClearBtn('CE')
 
-    onClickOperator(value) {
+        putCalcInMemo();
 
-        this.changeClearBtnLabel('CE');
+        let oldInput = input ? input : '0';
 
-        this.putCalcInMemo();
-
-        let oldInput = this.state.input ? this.state.input : '0';
-
-        const letters = oldInput.split(' ');
+        const letters = oldInput.trim().split(' ');
         const lastLetter = letters[letters.length - 1];
         const beforeLastLetter = letters[letters.length - 2];
 
         let newInput = oldInput;
 
 
-        if (this.isNumber(lastLetter) || lastLetter === '.') {
+        if (isNumber(lastLetter) || lastLetter === '.') {
             // if lastInput is a number (ex:1234) ou decimal (4.), add operator with space
             newInput = oldInput + ' ' + value;
         } else {
@@ -283,20 +233,23 @@ class App extends Component {
              *          => input: "45 x -"
              *       2_ otherwise, replace the lastLetter to the current operator
              */
-            if (this.isNumber(beforeLastLetter) && !this.isNumber(lastLetter)) {
+            // if + or - and current operator is [x/+-], replace the lastLetter to the current operator
+            const oldInputSubstr = oldInput.substring(0, oldInput.length - 1);
+            if (isNumber(beforeLastLetter) && !isNumber(lastLetter)) {
                 if (['÷', '×'].includes(lastLetter) && value === '-') {
                     newInput = oldInput + ' ' + value;
                 } else {
-                    // if + or - and current operator is [x/+-], replace the lastLetter to the current operator
-                    const oldInputSubstr = oldInput.substring(0, oldInput.length - 1);
                     newInput = oldInputSubstr + value;
                 }
-
+            } else {
+                if(beforeLastLetter === '.' && operator.includes(lastLetter)) {
+                    newInput = oldInputSubstr + value;
+                }
             }
 
         }
 
-        if (this.state.input === 'Error') {
+        if (input === 'Error') {
             if (value !== '-') {
                 newInput = '0 ' + value;
             } else {
@@ -304,105 +257,101 @@ class App extends Component {
             }
 
         }
-        this.setState({
-            input: newInput
-        });
 
-        this.isEqualClicked = false;
-        this.isDotClicked = false;
+        if(oldInput === '0' && value === '-') {
+            newInput = value;
+        }
+
+        setInput(newInput);
+
+        setIsEqualClicked(false);
+        setIsDotClicked(false);
     }
 
-    onClickDecimal() {
+    const onClickDecimal = () => {
+        if (!isDotClicked) {
 
-        if (!this.isDotClicked) {
+            putCalcInMemo();
 
-            this.putCalcInMemo();
-
-            let oldInput = this.state.input ? this.state.input : '';
+            let oldInput = input ? input : '';
             const letters = oldInput.split(' ');
             const lastLetter = letters[letters.length - 1];
             const beforeLastLetter = letters[letters.length - 2];
 
             let space = ' ';
 
-            if (this.isNumber(lastLetter)
-                || this.operator.includes(beforeLastLetter)) {
+            if (isNumber(lastLetter)
+                || operator.includes(beforeLastLetter)) {
                 space = '';
             }
 
             let newInput;
 
-            if (this.isEqualClicked) {
+            if (isEqualClicked) {
                 newInput = '.';
             } else {
                 newInput = oldInput + space + '.';
             }
 
-            this.setState({
-                'input': newInput
-            })
+            setInput(newInput)
         }
 
 
-        this.changeClearBtnLabel('CE');
-        this.isEqualClicked = false;
-        this.isDotClicked = true;
+        setClearBtn('CE')
+        setIsEqualClicked(false);
+        setIsDotClicked(true);
     }
 
-    isNumber(num) {
+    const isNumber = (num) => {
         return (typeof num == 'string' || typeof num == 'number') && !isNaN(num - 0) && num !== '';
     };
 
-    render() {
-        // get the status from the state
+    return (
+        <div className="App">
+            <Wrapper>
+                <ScreenBox>
+                    <Output result={result} memo={ans} animate={resultChanged}/>
+                    <Input input={input} animate={resultChanged}/>
+                </ScreenBox>
+                <ButtonBox>
+                    {pad.map((row, i) => {
+                        return <tr key={i}>
+                            {row.map((btn, j) => {
 
-        return (
-            <div className="App">
-                <Wrapper>
-                    <ScreenBox>
-                        <Output result={this.state.result} memo={this.state.ans} animate={this.state.resultChanged}/>
-                        <Input input={this.state.input} animate={this.state.resultChanged}/>
-                    </ScreenBox>
-                    <ButtonBox>
-                        {this.pad.map((row, i) => {
-                            return <tr key={i}>
-                                {row.map((btn, j) => {
+                                return <Button
+                                    key={j}
+                                    value={ACCE.includes(btn) ? clearBtn : btn}
+                                    className={btn === '='
+                                        ? 'btn-equal'
+                                        : operator.includes(btn)
+                                            ? 'btn-operator'
+                                            : ACCE.includes(btn)
+                                                ? 'btn-clear'
+                                                : sign.includes(btn)
+                                                    ? 'btn-sign'
+                                                    : 'btn-number'
+                                    }
+                                    onClick={btn === '='
+                                        ? onClickEqual.bind(this)
+                                        : operator.includes(btn)
+                                            ? onClickOperator.bind(this, btn)
+                                            : btn === '.'
+                                                ? onClickDecimal.bind(this)
+                                                : ACCE.includes(btn)
+                                                    ? onClickClearBtn.bind(this, clearBtn)
+                                                    : onClickPad.bind(this, btn)}
 
-                                    return <Button
-                                        key={j}
-                                        value={this.ACCE.includes(btn) ? this.state.clearBtn : btn}
-                                        className={btn === '='
-                                            ? 'btn-equal'
-                                            : this.operator.includes(btn)
-                                                ? 'btn-operator'
-                                                : this.ACCE.includes(btn)
-                                                    ? 'btn-clear'
-                                                    : this.sign.includes(btn)
-                                                        ? 'btn-sign'
-                                                        : 'btn-number'
-                                        }
-                                        onClick={btn === '='
-                                            ? this.onClickEqual.bind(this)
-                                            : this.operator.includes(btn)
-                                                ? this.onClickOperator.bind(this, btn)
-                                                : btn === '.'
-                                                    ? this.onClickDecimal.bind(this)
-                                                    : this.ACCE.includes(btn)
-                                                        ? this.onClickClearBtn.bind(this, this.state.clearBtn)
-                                                        : this.onClickPad.bind(this, btn)}
+                                />
+                            })}
+                        </tr>
 
-                                    />
-                                })}
-                            </tr>
+                    })}
 
-                        })}
+                </ButtonBox>
+            </Wrapper>
 
-                    </ButtonBox>
-                </Wrapper>
-
-            </div>
-        );
-    }
+        </div>
+    );
 }
 
 export default App;
