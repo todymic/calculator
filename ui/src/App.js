@@ -14,17 +14,19 @@ class App extends Component {
         this.state = {
             result: '',
             input: 0,
-            ans: ''
+            ans: '',
+            clearBtn: 'AC'
         };
         this.pad = [
-            ['(', ')', '%', 'C'],
+            ['(', ')', '%', 'AC'],
             ['7', '8', '9', '÷'],
             ['4', '5', '6', '×'],
             ['1', '2', '3', '-'],
             ['0', '.', '=', '+'],
         ];
         this.operator = ['+', '-', '×', '÷'];
-        this.sign = ['C', '%', '(', ')'];
+        this.sign = ['%', '(', ')', 'AC', 'CE'];
+        this.ACCE = ['AC', 'CE'];
 
         this.isEqualClicked = false; // flag for equal
         this.isDotClicked = false; // flag for '.' btn
@@ -38,6 +40,8 @@ class App extends Component {
 
         // console.log(this.state.input, this.state.input.search(/\s\.\s/));
         // console.log(/\. /g.test(this.state.input), this.state.input.replace(/\. /g, '.0'));
+
+        this.changeClearBtnLabel('CE');
 
         if (!this.operator.includes(this.state.input.slice(-1))
             && this.state.input.search('Infinity') === -1
@@ -78,6 +82,8 @@ class App extends Component {
                         this.setState({
                             ans: input
                         });
+
+                        this.changeClearBtnLabel('AC');
                     }
                 )
 
@@ -123,11 +129,12 @@ class App extends Component {
 
             this.putCalcInMemo();
 
+            this.changeClearBtnLabel('CE');
+
             let oldInput = this.state.input ? this.state.input : '0';
 
             let input = value;
 
-            console.log(oldInput);
             if (oldInput !== '0' && !this.isEqualClicked) // reset input screen after click on equal OR
             {
                 const letters = oldInput.split(' ');
@@ -142,7 +149,7 @@ class App extends Component {
                 if (this.isNumber(lastLetter)
                     || lastLetter === '.'
                     || lastLetter === '-.'
-                    || (!this.isNumber(beforeLastLetter) && lastLetter === '-')) // NEG num
+                    || (this.operator.includes(beforeLastLetter) && lastLetter === '-')) // NEG num
                 {
                     space = ''
                 }
@@ -156,21 +163,11 @@ class App extends Component {
             }
 
             this.setState({
-                'input': input
+                input: input
             })
 
 
         } else {
-
-            if (value === 'C') { //reset button
-
-                this.putCalcInMemo()
-
-                this.setState({
-                    'input': 0
-                })
-            }
-
             // nothing to do for parentheis and percentage
             this.isDotClicked = false;
         }
@@ -179,8 +176,48 @@ class App extends Component {
 
     }
 
+    onClickClearBtn(value) {
+
+        if (value === 'AC') { //reset button
+            this.putCalcInMemo()
+
+            this.setState({
+                input: 0
+            })
+        } else {
+
+            let oldInput = this.state.input ? this.state.input : '0';
+            let letters = oldInput.split('');
+            const beforeLastLetter = letters[letters.length - 2];
+
+            let newInput;
+            if(letters.length > 1) {
+                letters.pop();
+                if(beforeLastLetter === ' ') {
+                    letters.pop();
+                }
+
+                newInput =  letters.join('')
+            } else {
+                newInput = '0';
+            }
+
+            this.setState({
+                input: newInput
+            })
+
+        }
+    }
+
+    changeClearBtnLabel(value) {
+        this.setState({
+            clearBtn: value
+        })
+    }
+
     onClickOperator(value) {
 
+        this.changeClearBtnLabel('CE');
         this.putCalcInMemo();
 
         let oldInput = this.state.input ? this.state.input : '0';
@@ -217,7 +254,7 @@ class App extends Component {
         }
 
         this.setState({
-            'input': newInput
+            input: newInput
         });
 
         this.isEqualClicked = false;
@@ -256,6 +293,7 @@ class App extends Component {
         }
 
 
+        this.changeClearBtnLabel('CE');
         this.isEqualClicked = false;
         this.isDotClicked = true;
     }
@@ -281,15 +319,20 @@ class App extends Component {
 
                                     return <Button
                                         key={j}
-                                        value={btn}
+                                        value={this.ACCE.includes(btn) ? this.state.clearBtn : btn}
                                         className={btn === '='
                                             ? 'equals' : this.operator.includes(btn) || this.sign.includes(btn)
                                                 ? 'operator' : 'number'
                                         }
                                         onClick={btn === '='
-                                            ? this.onClickEqual.bind(this) : this.operator.includes(btn)
-                                                ? this.onClickOperator.bind(this, btn) : btn === '.'
-                                                    ? this.onClickDecimal.bind(this) : this.onClickPad.bind(this, btn)}
+                                            ? this.onClickEqual.bind(this)
+                                            : this.operator.includes(btn)
+                                                ? this.onClickOperator.bind(this, btn)
+                                                : btn === '.'
+                                                    ? this.onClickDecimal.bind(this)
+                                                    : this.ACCE.includes(btn)
+                                                        ? this.onClickClearBtn.bind(this, this.state.clearBtn)
+                                                        : this.onClickPad.bind(this, btn)}
 
                                     />
                                 })}
