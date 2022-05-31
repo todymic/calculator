@@ -1,6 +1,6 @@
 <?php
 
-namespace Model;
+namespace App\Tests\Model;
 
 use App\Exception\InvalidExpressionValueException;
 use App\Model\Expression\ExpressionFactory;

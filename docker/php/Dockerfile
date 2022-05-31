@@ -19,3 +19,4 @@ RUN php -r "readfile('https://getcomposer.org/installer');" | php -- --install-d
 
 COPY . /var/www/api
 WORKDIR /var/www/api
+

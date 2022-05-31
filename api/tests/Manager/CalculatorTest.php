@@ -8,7 +8,6 @@ use App\Model\Expression\Operator\Division;
 use App\Model\Expression\Operator\Multiplication;
 use App\Model\Parser\OperatorParser;
 use App\Model\Stack;
-use App\Tests\Mock\ExpressionFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +19,6 @@ class CalculatorTest extends TestCase
     public Calculator $calculator;
 
 	private MockObject|OperatorParser $parser;
-	private MockObject|ExpressionFactory $expressionFactory;
 
 	/**
      * @return array<int, array<string[]|string>>
@@ -38,19 +36,16 @@ class CalculatorTest extends TestCase
     protected function setUp(): void
     {
         $request = new Request();
-        $request->request->set('input', '1+2');
+        $request->request->set('input', '1*2');
 
 		$this->parser = $this->createMock(OperatorParser::class);
 
         $this->calculator = new Calculator($this->parser);
     }
 
-    /**
-     * @depends testFormatedOutput
-     */
     public function testExecute(): void
     {
-        $this->assertEquals('3', $this->calculator->execute('1+2'));
+        $this->assertEquals('2', $this->calculator->execute('1*2'));
     }
 
     /**

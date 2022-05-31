@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Model\Parser;
+namespace App\Tests\Model\Parser;
 
 use App\Model\Expression\Operator\Addition;
 use App\Model\Expression\Operator\Division;
 use App\Model\Expression\Operator\Multiplication;
 use App\Model\Expression\Operator\Subtraction;
+use App\Model\Parser\OperatorParser;
 use App\Tests\Mock\Stack;
 use PHPUnit\Framework\TestCase;
 
