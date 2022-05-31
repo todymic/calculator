@@ -10,9 +10,9 @@ Application de calculator.
 
 ## Utilisation
 
-- Cloner le repository git.
+1. Cloner le repository git.
 
-- Dans un terminal, taper la commande suivante :
+2. Dans un terminal, taper la commande suivante :
 
 ```shell
 cd calculator
@@ -24,11 +24,10 @@ Une fois la commande exécutée, si tout s'est bien passé, 3 conteneurs sont mo
 * ui
 
 
-- Puis lancer l'API en executant la commande suivante :
+3. Lancer l'API en executant la commande suivante :
 ```shell
 docker exec -it calculator-php_fpm-1 /bin/bash -c "composer install"
 ```
-
 
 Pour accéder au front : http://localhost:3000
 
@@ -36,7 +35,7 @@ Pour accéder au Back: POST http://localhost:8080/api/calcul
 
 ## Tests
 
-POur lancer les tests unitaire, taper la commande:
+Pour lancer les tests unitaire, taper la commande:
 
 ```shell
 docker exec -it calculator-php_fpm-1 /bin/bash -c "php bin/phpunit"
