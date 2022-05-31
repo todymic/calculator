@@ -1,19 +1,13 @@
 FROM node:current-alpine3.14
 
-# this is a development Dockerfile
-# and is not intended for production use
+USER node
+
+COPY --chown=node:node ./ui /var/www/ui
 WORKDIR /var/www/ui
 
-COPY ../../ui/package.json /var/www/ui/
+COPY ./ui/package.json /var/www/ui/
 
 RUN yarn install
 
-COPY . /var/www/ui
-
-RUN chown -R node node_modules
-USER node
-
-# this what make hot reloading works
-# because you are starting your project
-# in the same way you running it locally
+RUN yarn run build
 CMD yarn start

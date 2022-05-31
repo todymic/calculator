@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.3"
 
 services:
     nginx:
@@ -9,7 +9,7 @@ services:
             - ./api:/var/www/api
             - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
         ports:
-            -   "8080:80"
+            -  "8080:80"
         depends_on:
             - php_fpm
             - ui
@@ -27,14 +27,19 @@ services:
 
     ui:
         build:
-            dockerfile: ./docker/ui/Dockerfile
+            context: .
+            dockerfile: docker/ui/Dockerfile
         command: "npm start"
         networks:
             - monitoring
         volumes:
-            - ${PWD}/ui:/var/www/ui
+            - ./ui:/var/www/ui
+            - nodemodules:/var/www/ui/node_modules
         ports:
             - "3000:3000"
+
+volumes:
+    nodemodules: {}
 
 networks:
     monitoring:
