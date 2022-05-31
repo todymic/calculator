@@ -34,6 +34,7 @@ Pour accéder au Back: POST http://localhost:8080/api/calcul
 ```shell
  cd ui
  yarn install
+ yarn start
 ```
 Pour accéder au front : http://localhost:3000
 

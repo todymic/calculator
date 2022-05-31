@@ -31,7 +31,7 @@ const App = () => {
 
     const onClickEqual = () => {
 
-        setClearBtn('CE');
+        setClearBtn('AC');
 
         setResultChanged(false);
 
@@ -65,7 +65,6 @@ const App = () => {
 
                         setResult('')
                         setAns(inputResult)
-                        setClearBtn('AC')
 
                         setTimeout(() => {
                             setResultChanged(true);
@@ -104,7 +103,8 @@ const App = () => {
 
     const putCalcInMemo = () => {
 
-        if (isEqualClicked) {
+        if (isEqualClicked || (ans === '' && result === ''))
+        {
             setAns('Ans');
 
             let newInput = input === 'Error' ? '0' : input;
