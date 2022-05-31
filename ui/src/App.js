@@ -30,7 +30,6 @@ class App extends Component {
 
         this.isEqualClicked = false; // flag for equal
         this.isDotClicked = false; // flag for '.' btn
-        this.isError = false;
 
     }
 
@@ -39,12 +38,8 @@ class App extends Component {
 
     onClickEqual() {
 
-        // console.log(this.state.input, this.state.input.search(/\s\.\s/));
-        // console.log(/\. /g.test(this.state.input), this.state.input.replace(/\. /g, '.0'));
-
         this.changeClearBtnLabel('CE');
 
-        console.log('**'+this.state.input.trim()+'**')
         if (this.state.input.trim() !== '.'
             && !this.operator.includes(this.state.input.slice(-1))
             && this.state.input.search('Infinity') === -1
@@ -100,37 +95,34 @@ class App extends Component {
 
             if (this.state.input.search('Infinity') > -1) {
 
-                this.setState({
-                    input: 'Infinity'
-                })
+                this.changeStateResult('', this.state.input, 'Infinity')
 
-                this.setState({
-                    ans: this.state.input
-                });
-
-                this.setState({
-                    result: ''
-                })
             } else {
-                if(this.state.input.trim() === '.') {
-                    this.setState({
-                        result: ''
-                    })
+                if (this.state.input.trim() === '.') {
 
-                    this.setState({
-                        ans: this.state.input
-                    });
+                    this.changeStateResult('', this.state.input, 'Error')
 
-                    this.setState({
-                        input: 'Error'
-                    })
                 }
             }
 
         }
 
 
-        this.state.isDotClicked = false;
+        this.isDotClicked = false;
+    }
+
+    changeStateResult(result, ans, input) {
+        this.setState({
+            result: result
+        })
+
+        this.setState({
+            ans: ans
+        });
+
+        this.setState({
+            input: input
+        })
     }
 
     putCalcInMemo() {
@@ -185,7 +177,7 @@ class App extends Component {
 
                 input = oldInput + space + value;
 
-                // it's already a float number, put the flag on to prevent another .
+                // it's already a float number, put the flag ON to prevent another .
                 if (lastLetter.indexOf('.') > -1) {
                     this.state.isDotClicked = true;
                 }
@@ -220,13 +212,13 @@ class App extends Component {
             const beforeLastLetter = letters[letters.length - 2];
 
             let newInput;
-            if(letters.length > 1) {
+            if (letters.length > 1) {
                 letters.pop();
-                if(beforeLastLetter === ' ') {
+                if (beforeLastLetter === ' ') {
                     letters.pop();
                 }
 
-                newInput =  letters.join('')
+                newInput = letters.join('')
             } else {
                 newInput = '0';
             }
@@ -283,8 +275,8 @@ class App extends Component {
 
         }
 
-        if(this.state.input === 'Error') {
-            if(value !== '-') {
+        if (this.state.input === 'Error') {
+            if (value !== '-') {
                 newInput = '0 ' + value;
             } else {
                 newInput = value;
@@ -359,8 +351,14 @@ class App extends Component {
                                         key={j}
                                         value={this.ACCE.includes(btn) ? this.state.clearBtn : btn}
                                         className={btn === '='
-                                            ? 'equals' : this.operator.includes(btn) || this.sign.includes(btn)
-                                                ? 'operator' : 'number'
+                                            ? 'btn-equal'
+                                            : this.operator.includes(btn)
+                                                ? 'btn-operator'
+                                                : this.ACCE.includes(btn)
+                                                    ? 'btn-clear'
+                                                    : this.sign.includes(btn)
+                                                        ? 'btn-sign'
+                                                        : 'btn-number'
                                         }
                                         onClick={btn === '='
                                             ? this.onClickEqual.bind(this)

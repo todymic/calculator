@@ -15,7 +15,7 @@
     border-radius: 4px;
 }
 
-.number {
+.btn-number {
     background: #f1f3f4;
     color: #202124;
     border: 1px solid #f1f3f4;
@@ -23,37 +23,16 @@
     font-size: 14px;
 }
 
-.number:focus:hover {
+.btn-number:focus:hover {
     background: #f1f3f4;
 }
 
-.number:active {
+.btn-number:active {
     box-shadow: 0 1px 6px rgb(32 33 36 / 28%);
     border-color: #70757a;
 }
 
-.btn-sign {
-    font-size: 18px;
-}
-
-.equals {
-    background: #4285f4;
-    color: #fff;
-    border: 1px solid #4285f4;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.equals:focus:hover {
-    background: #4285f4;
-}
-
-.equals:active {
-    box-shadow: 0 1px 2px 0 rgb(66 133 244 / 45%), 0 3px 6px 2px rgb(66 133 244 / 30%);
-    border-color: #1a0dab;
-}
-
-.operator {
+.btn-pad {
     background: #dadce0;
     color: #202124;
     border: 1px solid #dadce0;
@@ -61,11 +40,40 @@
     box-sizing: border-box;
 }
 
-.operator:focus:hover {
+.btn-sign {
+    font-size: 14px;
+}
+
+.btn-clear {
+    font-size: 13px;
+}
+
+.btn-equal {
+    background: #4285f4;
+    color: #fff;
+    border: 1px solid #4285f4;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.btn-equal:focus:hover {
+    background: #4285f4;
+}
+
+.btn-equal:active {
+    box-shadow: 0 1px 2px 0 rgb(66 133 244 / 45%), 0 3px 6px 2px rgb(66 133 244 / 30%);
+    border-color: #1a0dab;
+}
+
+.btn-operator {
+    font-size: 18px;
+}
+
+.btn-operator:focus:hover {
     background: #dadce0;
 }
 
-.operator:active {
+.btn-operator:active {
     box-shadow: 0 1px 6px rgb(32 33 36 / 28%);
     border-color: #70757a;
 }
