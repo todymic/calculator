@@ -43,5 +43,5 @@ Pour accéder au front : http://localhost:3000
 Pour lancer les tests unitaire, taper la commande:
 
 ```shell
-docker exec -it calculator-php_fpm-1 /bin/bash -c "php bin/phpunit"
+docker exec -it calculator_php_fpm_1 /bin/bash -c "php bin/phpunit"
 ```
