@@ -7,7 +7,7 @@ use DivisionByZeroError;
 
 class Division extends Operator
 {
-	final public const OPERATOR = '/';
+    final public const OPERATOR = '/';
 
     protected int $precedence = 5;
 
@@ -16,12 +16,11 @@ class Division extends Operator
         $left = $stack->pop()->operate($stack);
         $right = $stack->pop()->operate($stack);
 
-		if($left == '0') {
-			$errorMessage = $right == '0' ? 'Error' : 'Infinity';
+        if ($left == '0') {
+            $errorMessage = $right == '0' ? 'Error' : 'Infinity';
 
-			throw new DivisionByZeroError($errorMessage);
-
-		}
+            throw new DivisionByZeroError($errorMessage);
+        }
 
         return $right / $left;
     }
