@@ -6,7 +6,7 @@ use App\Model\Stack;
 
 class Addition extends Operator
 {
-	final public const OPERATOR = '+';
+    final public const OPERATOR = '+';
 
     protected int $precedence = 4;
 

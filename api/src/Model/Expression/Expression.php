@@ -6,13 +6,12 @@ use App\Model\Stack;
 
 abstract class Expression
 {
-	abstract public function operate(Stack $stack);
+    abstract public function operate(Stack $stack);
 
-	abstract public function render(): string;
+    abstract public function render(): string;
 
-	public function isOperator(): bool
-	{
-		return false;
-	}
-
+    public function isOperator(): bool
+    {
+        return false;
+    }
 }
