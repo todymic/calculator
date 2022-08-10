@@ -3,16 +3,39 @@
 Application de calculator.
 
 ## Création de l'environnement
+
+
+## 1ere cas d'utilidation: SANS DOCKER
 ### Requirements
-* Git
-* Docker
-* Docker-compose
+* yarn
+* php
+* composer
+* symfony CLI
 
-## Utilisation
+1. Cloner le repository git dans un serveur web.
+2. Dans un terminal, taper les commandes suivantes:
+```shell
+# API:
+cd calculator/api 
+composer install
+symfony server:start --port=8080 -d
+# Acces Back: POST http://localhost:8080/api/calcul
+# exemple: curl -X POST -H "Content-Type: application/json" -d '{"input": "1+2"}' http://localhost:8080/api/calcul
 
-1. Cloner le repository git.
+# UI:
+cd calculator/ui 
+yarn install
+yarn watch 
+# voir : http://localhost:3000
+```
+Pour accéder au Back: POST http://localhost:8080/api/calcul
+Pour accéder au front : http://localhost:3000
 
-2. Dans un terminal, taper la commande suivante :
+## 2e cas d'utilisation : AVEC DOCKER
+
+1. Cloner le repository git
+
+2. Dans un terminal, taper la commandes suivantes:
 
 ```shell
 cd calculator
