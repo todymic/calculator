@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Manager\Calculator;
+use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,32 +15,26 @@ use Throwable;
 
 class CalculController extends AbstractController
 {
+    use ControllerTrait;
+
     #[Route('/calcul', name: 'app_calcul', methods: 'POST')]
     #[RequestParam(name: 'input')]
-    public function index(ParamFetcher $paramFetcher,Calculator $calculator): View
+    public function index(ParamFetcher $paramFetcher, Calculator $calculator): View
     {
         $input = $paramFetcher->get('input');
-
-        $view = View::create();
-
         try {
-
             $result = $calculator->execute($input);
 
             $response = [
                 'result' => $result,
             ];
-
+            return $this->view($response, Response::HTTP_CREATED);
         } catch (Throwable $e) {
             $response = [
                 'error' => $e->getMessage()
             ];
 
-            $view->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->view($response, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        $view->setData($response);
-
-        return $view;
     }
 }
