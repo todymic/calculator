@@ -26,12 +26,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private string $password;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private ?string $firstname;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private ?string $lastname;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: ApiToken::class, orphanRemoval: true)]
     private Collection $apiTokens;
 
@@ -64,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     /**
@@ -110,30 +104,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname): self
-    {
-        $this->firstname = $firstname;
-
-        return $this;
-    }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(string $lastname): self
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, ApiToken>
      */
@@ -146,7 +116,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->apiTokens->contains($apiToken)) {
             $this->apiTokens->add($apiToken);
-            $apiToken->setUser($this);
         }
 
         return $this;
@@ -154,12 +123,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeApiToken(ApiToken $apiToken): self
     {
-        if ($this->apiTokens->removeElement($apiToken)) {
-            // set the owning side to null (unless already changed)
-            if ($apiToken->getUser() === $this) {
-                $apiToken->setUser(null);
-            }
-        }
+        $this->apiTokens->removeElement($apiToken);
 
         return $this;
     }
