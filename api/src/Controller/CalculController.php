@@ -3,35 +3,43 @@
 namespace App\Controller;
 
 use App\Manager\Calculator;
+use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
+
 use Throwable;
 
 class CalculController extends AbstractController
 {
     #[Route('/calcul', name: 'app_calcul', methods: 'POST')]
-    public function index(Request $request, Calculator $calculator): JsonResponse
+    #[RequestParam(name: 'input')]
+    public function index(ParamFetcher $paramFetcher,Calculator $calculator): View
     {
-        $input = '';
+        $input = $paramFetcher->get('input');
+
+        $view = View::create();
 
         try {
-            if ($content = $request->getContent()) {
-                $input = json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
-            }
 
-            $result = $calculator->execute($input['input']);
+            $result = $calculator->execute($input);
 
-            return $this->json([
+            $response = [
                 'result' => $result,
-            ]);
+            ];
+
         } catch (Throwable $e) {
-            return $this->json([
-                'error' => $e->getMessage(),
-                Response::HTTP_INTERNAL_SERVER_ERROR,
-            ]);
+            $response = [
+                'error' => $e->getMessage()
+            ];
+
+            $view->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+        $view->setData($response);
+
+        return $view;
     }
 }
