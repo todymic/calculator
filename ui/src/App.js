@@ -1,5 +1,10 @@
 import './App.css';
 import React, {useState} from 'react';
+import { ReactNotifications , Store} from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+// import 'animate.css';
+
+
 import Wrapper from './components/wrapper/Wrapper';
 import ScreenBox from "./components/screen/Screen";
 import Output from "./components/screen/Output";
@@ -29,6 +34,9 @@ const App = () => {
     const sign = ['%', '(', ')', 'AC', 'CE'];
     const ACCE = ['AC', 'CE'];
 
+    /*
+     *
+     */
     const onClickEqual = () => {
 
         setClearBtn('AC');
@@ -101,7 +109,10 @@ const App = () => {
         setInput(inputArg)
     }
 
-    const putCalcInMemo = () => {
+    /**
+     * Put result in Memory
+     */
+    const memoryResult = () => {
 
         if (isEqualClicked || (ans === '' && result === ''))
         {
@@ -118,7 +129,7 @@ const App = () => {
 
         if (!sign.includes(value)) {
 
-            putCalcInMemo();
+            memoryResult();
 
             setClearBtn('CE');
 
@@ -172,6 +183,8 @@ const App = () => {
 
         } else {
             // nothing to do for parentheis and percentage
+
+            displayAddMessage();
             setIsDotClicked(false);
         }
 
@@ -182,7 +195,7 @@ const App = () => {
     const onClickClearBtn = (value) => {
 
         if (value === 'AC') { //reset button
-            putCalcInMemo()
+            memoryResult()
 
             setInput('0')
         } else {
@@ -211,7 +224,7 @@ const App = () => {
     const onClickOperator = (value) => {
         setClearBtn('CE')
 
-        putCalcInMemo();
+        memoryResult();
 
         let oldInput = input ? input : '0';
 
@@ -271,7 +284,7 @@ const App = () => {
     const onClickDecimal = () => {
         if (!isDotClicked) {
 
-            putCalcInMemo();
+            memoryResult();
 
             let oldInput = input ? input : '';
             const letters = oldInput.split(' ');
@@ -306,8 +319,22 @@ const App = () => {
         return (typeof num == 'string' || typeof num == 'number') && !isNaN(num - 0) && num !== '';
     };
 
+    const displayAddMessage = () => {
+        Store.addNotification({
+            title: "Not available",
+            message: "This button is not available yet. Please wait..",
+            type: "info",
+            insert: "top",
+            container: "bottom-left",
+            animationIn: ["animated", "fadeIn"],
+            animationOut: ["animated", "fadeOut"],
+            dismiss: { duration: 2000 },
+            dismissable: { click: true }
+        });
+    };
     return (
         <div className="App">
+            <ReactNotifications />
             <Wrapper>
                 <ScreenBox>
                     <Output result={result} memo={ans} animate={resultChanged}/>
@@ -349,7 +376,6 @@ const App = () => {
 
                 </ButtonBox>
             </Wrapper>
-
         </div>
     );
 }
