@@ -52,11 +52,17 @@ const App = () => {
             const url = `${process.env.REACT_APP_API_URL}/calcul`;
 
             const formattedInput = input.replace(/×/g, '*').replace(/÷/g, '/').replace(/\. /g, '.0 ');
-
             // if Infinity, don't call the API
+            let data = {
+                "input" : formattedInput
+            }
+
             fetch(url, {
                 method: 'POST',
-                body: JSON.stringify({'input': formattedInput})
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json"
+                }
             })
                 .then(res => res.json())
                 .then(
