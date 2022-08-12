@@ -5,8 +5,11 @@ security:
         algorithm: auto
 
     providers:
-      # used to reload user from session & other features (e.g. switch_user)
       app_user_provider:
+        entity:
+          class: App\Entity\User
+          property: email
+      api_token_provider:
         entity:
           class: App\Entity\User
           property: apiToken
@@ -28,6 +31,7 @@ security:
       api:
         pattern: ^/api
         stateless: true
+        provider: api_token_provider
         custom_authenticators:
           - App\Security\TokenAuthenticator
     

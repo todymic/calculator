@@ -42,7 +42,7 @@ final class UserFactory extends ModelFactory
         return [
             'email' => self::faker()->email(),
             'password' => $this->passwordHasher->hashPassword(new User(), 'test'),
-            'apiToken' => bin2hex(random_bytes(60)),
+            'apiToken' => rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '='),
         ];
     }
 
