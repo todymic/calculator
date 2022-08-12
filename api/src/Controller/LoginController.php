@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use Exception;
 use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,9 +15,9 @@ class LoginController extends AbstractController
     use ControllerTrait;
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    #[Route('/login', name: 'api_login', methods: 'POST')]
+    #[Route('/login', name: 'api_login', methods: 'GET')]
     public function index(): View
     {
         /** @var User $user */
