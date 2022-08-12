@@ -2,3 +2,4 @@ controllers:
     prefix: /api/
     resource: ../src/Controller/
     type: attribute
+

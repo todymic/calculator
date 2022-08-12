@@ -11,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use Throwable;
 
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
@@ -23,6 +22,7 @@ class CalculController extends AbstractController
     #[RequestParam(name: 'input')]
     public function index(ParamFetcher $paramFetcher, Calculator $calculator): View
     {
+
         $input = $paramFetcher->get('input');
         try {
             $result = $calculator->execute($input);

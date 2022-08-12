@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,12 +24,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private string $password;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ApiToken::class, orphanRemoval: true)]
-    private Collection $apiTokens;
+    #[ORM\Column(type: 'string')]
+    private string $apiToken;
 
     public function __construct()
     {
-        $this->apiTokens = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -58,7 +56,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->apiToken;
     }
 
     /**
@@ -104,27 +102,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection<int, ApiToken>
-     */
-    public function getApiTokens(): Collection
+    public function getApiToken(): ?string
     {
-        return $this->apiTokens;
+        return $this->apiToken;
     }
 
-    public function addApiToken(ApiToken $apiToken): self
+    public function setApiToken(string $apiToken): self
     {
-        if (!$this->apiTokens->contains($apiToken)) {
-            $this->apiTokens->add($apiToken);
-        }
+        $this->apiToken = $apiToken;
 
         return $this;
     }
 
-    public function removeApiToken(ApiToken $apiToken): self
-    {
-        $this->apiTokens->removeElement($apiToken);
 
-        return $this;
-    }
 }

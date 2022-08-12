@@ -22,6 +22,8 @@ class CalculControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertJsonStringEqualsJsonString(json_encode(['result' => '5']), $content);
     }
+
+    
     public function testAccessForbidden(): void
     {
         $client = static::createClient();
