@@ -23,8 +23,8 @@ class LoginController extends AbstractController
     /**
      * @throws Exception
      */
-    #[Route('/login', name: 'api_login', methods: 'GET')]
-    public function index(): View
+    #[Get('/login', name: 'api_login')]
+    public function login(): RestView
     {
         /** @var User $user */
         $user = $this->getUser();

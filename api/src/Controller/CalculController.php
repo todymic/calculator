@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Manager\Calculator;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\Request\ParamFetcher;
@@ -18,7 +19,7 @@ class CalculController extends AbstractController
 {
     use ControllerTrait;
 
-    #[Route('/calcul', name: 'app_calcul', methods: 'POST')]
+    #[Post('/calcul', name: 'app_calcul')]
     #[RequestParam(name: 'input')]
     public function index(ParamFetcher $paramFetcher, Calculator $calculator): View
     {
