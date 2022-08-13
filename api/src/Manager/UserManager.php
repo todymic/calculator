@@ -5,12 +5,15 @@ namespace App\Manager;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class UserManager
 {
     public function __construct(private readonly EntityManagerInterface $entityManager,
-                                private readonly UserPasswordHasherInterface $passwordHasher)
-    {
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly SerializerInterface $serializer,
+    ) {
     }
 
     /**
@@ -28,5 +31,8 @@ class UserManager
         return $user;
     }
 
-
+    public function serializeUser(UserInterface $user, array $context = []): array
+    {
+        return json_decode($this->serializer->serialize($user, 'json', $context), true);
+    }
 }

@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Manager\UserManager;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -18,19 +20,24 @@ class UserController extends AbstractController
 {
     use ControllerTrait;
 
-    #[Get('/{id}', name: 'profil', requirements: ['id' => "\d+"])]
-    public function getProfile(User $user, SerializerInterface $serializer): View
+    public function __construct(private readonly UserManager $userManager)
     {
-        $response = json_decode($serializer->serialize($user, 'json', [AbstractNormalizer::GROUPS => 'get_user']), true);
+    }
 
-        return $this->view($response);
+    #[Get('/{id}', name: 'profil', requirements: ['id' => "\d+"])]
+    #[ParamConverter('user', class: User::class)]
+    public function getProfile(User $user): View
+    {
+        $serializedUser = $this->userManager->serializeUser($user, [AbstractNormalizer::GROUPS => 'get_user']);
+
+        return $this->view($serializedUser);
     }
 
     #[Route('/me', name: 'app_me', methods: 'GET')]
-    public function getCurrentUser(SerializerInterface $serializer): View
+    public function getCurrentUser(): View
     {
-        $response = json_decode($serializer->serialize($this->getUser(), 'json', [AbstractNormalizer::GROUPS => 'get_user']), true);
+        $serializedUser = $this->userManager->serializeUser($this->getUser(), [AbstractNormalizer::GROUPS => 'get_user']);
 
-        return $this->view($response);
+        return $this->view($serializedUser);
     }
 }
