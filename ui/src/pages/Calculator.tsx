@@ -43,7 +43,8 @@ const Calculator = () => {
 
 
     /*
-     *
+     * On click equal, send the calcul to server
+     * If not logged yet, show login/register form in Modal
      */
     const onClickEqual = () => {
 
@@ -63,7 +64,8 @@ const Calculator = () => {
                 "input": formattedInput
             }
 
-            CalculatorService.getResult(data)
+            const token = user!.apiToken ?? ''
+            CalculatorService.getResult(data, token)
                 .then(
                     (result) => {
 
@@ -115,6 +117,12 @@ const Calculator = () => {
 
     };
 
+    /**
+     * Handle the text above the screen result
+     * @param resultArg
+     * @param ansArg
+     * @param inputArg
+     */
     const changeStateResult = (resultArg: string, ansArg: string, inputArg: string) => {
         setResult(resultArg)
 
