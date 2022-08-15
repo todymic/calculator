@@ -10,7 +10,7 @@ export interface IRegisterForm extends ILoginForm {
 }
 
 /*
- * Login and put in LocalStorage the user if authentication succeed
+ * LoginForm and put in LocalStorage the user if authentication succeed
  */
 const login = async (payload: ILoginForm): Promise<UserInterface> => {
     const response = await Client.post(`/login`, payload)

@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import {ReactNotifications, Store} from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 
 
@@ -13,10 +12,11 @@ import CalculatorService from "../services/Calculator.service";
 import {AxiosError} from "axios";
 import {InputInterface, ResultInterface} from "../types/Calcul.Interface";
 import AuthDialog from "../components/layout/AuthDialog";
-import {Dialog} from "@mui/material";
-
+import useAuth from "../auth/AuthProvider";
+import {Notification} from "../components/tool/Notification";
 
 const Calculator = () => {
+    const { user, loading, error, signUp, logout } = useAuth();
     const [result, setResult] = useState<ResultInterface | string>('');
     const [input, setInput] = useState<string>('0');
     const [ans, setAns] = useState<string>('');
@@ -25,12 +25,14 @@ const Calculator = () => {
     const [isDotClicked, setIsDotClicked] = useState<boolean>(false);
     const [isEqualClicked, setIsEqualClicked] = useState<boolean>(false);
 
+    //Dialog State
+    const [open, setOpen] = useState<boolean>(false);
 
     // Alert State
     const [alertOpen, setAlertOpen] = useState<boolean>(false);
     const [messageAlert, setMessageAlert] = useState<string|null>(null);
 
-
+    // The pads represantation
     const pad = [
         ['(', ')', '%', 'AC'],
         ['7', '8', '9', '÷'],
@@ -75,8 +77,6 @@ const Calculator = () => {
 
                         if (result.data.result) {
                             setInput(result.data.result);
-                        } else {
-                            setInput('Error');
                         }
 
                         setResult('')
@@ -89,11 +89,16 @@ const Calculator = () => {
                 ).catch((error: AxiosError) => {
 
 
-                console.log(error.response?.status)
                 // if 401,modal
                 if (error.response?.status === 401) {
                     setOpen(true)
+                } else {
+                    setInput('Error');
+                    setResult('')
 
+                    setTimeout(() => {
+                        setResultChanged(true);
+                    });
                 }
 
             })
@@ -364,7 +369,7 @@ const Calculator = () => {
     return (
 
         <div className="calculator-wrapper">
-            <AuthDialog open={open} onClose={handleClose} />
+            <AuthDialog open={open} onClose={handleClose} setOpen={setOpen} />
             <Notification  open={alertOpen}
                            onClose={handleAlertClose}
                            messageAlert={messageAlert}

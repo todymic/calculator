@@ -1,24 +1,28 @@
 import React from "react";
-import {DialogContent, DialogTitle, TextField} from "@mui/material";
+import {Dialog, Grid} from "@mui/material";
+import {LoginForm} from "./LoginForm";
+import Slide from '@mui/material/Slide';
+import {TransitionProps} from '@mui/material/transitions';
 
-const AuthDialog = () => {
-    return (
-        <>
-            <DialogTitle>Subscribe</DialogTitle>
-            <DialogContent>
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+        children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    label="Email Address"
-                    type="email"
-                    fullWidth
-                    variant="standard"
-                />
-            </DialogContent>
-        </>
-    )
+const AuthDialog = (props: any) => {
+    const {setOpen} = props;
+    return <Dialog {...props}
+                TransitionComponent={Transition}
+                aria-describedby="alert-dialog-slide-description"
+                   fullWidth
+            >
+            <LoginForm setOpen={setOpen}/>
+        </Dialog>
+
 }
 
 
