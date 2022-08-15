@@ -25,6 +25,7 @@ security:
         provider: app_user_provider
         json_login:
           check_path: api_login
+          username_path: email
         logout:
           path: app_logout
 
