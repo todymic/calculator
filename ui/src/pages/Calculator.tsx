@@ -26,7 +26,9 @@ const Calculator = () => {
     const [isEqualClicked, setIsEqualClicked] = useState<boolean>(false);
 
 
-    const [open, setOpen] = useState(false);
+    // Alert State
+    const [alertOpen, setAlertOpen] = useState<boolean>(false);
+    const [messageAlert, setMessageAlert] = useState<string|null>(null);
 
 
     const pad = [
@@ -202,9 +204,9 @@ const Calculator = () => {
             setInput(newInput)
 
         } else {
-            // nothing to do for parentheis and percentage
+            // display alert for parentheis and percentage
 
-            displayAddMessage();
+            showAlert(value + ' will be available soon. Please wait...');
             setIsDotClicked(false);
         }
 
@@ -341,30 +343,32 @@ const Calculator = () => {
             && !isNaN(Number(value.toString())));
     };
 
-    const displayAddMessage = () => {
-        Store.addNotification({
-            title: "Not available",
-            message: "This button is not available yet. Please wait..",
-            type: "info",
-            insert: "top",
-            container: "bottom-left",
-            animationIn: ["animated", "fadeIn"],
-            animationOut: ["animated", "fadeOut"],
-            dismiss: {duration: 2000}
-        });
+    const showAlert = (message: string) => {
+
+        setAlertOpen(true);
+        setMessageAlert(message)
     };
 
     let handleClose = () => {
         setOpen(false);
     };
 
+    const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setAlertOpen(false);
+    };
+
     return (
 
         <div className="calculator-wrapper">
-            <ReactNotifications/>
-                <Dialog open={open} onClose={handleClose}>
-                    <AuthDialog/>
-                </Dialog>
+            <AuthDialog open={open} onClose={handleClose} />
+            <Notification  open={alertOpen}
+                           onClose={handleAlertClose}
+                           messageAlert={messageAlert}
+            />
             <Wrapper>
                 <ScreenBox>
                     <Output result={result} memo={ans} animate={resultChanged}/>
