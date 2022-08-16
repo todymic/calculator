@@ -1,5 +1,5 @@
-import React from "react";
-import {Dialog, Grid} from "@mui/material";
+import React, {SetStateAction} from "react";
+import {Dialog, DialogProps} from "@mui/material";
 import {LoginForm} from "./LoginForm";
 import Slide from '@mui/material/Slide';
 import {TransitionProps} from '@mui/material/transitions';
@@ -13,14 +13,21 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const AuthDialog = (props: any) => {
-    const {setOpen} = props;
+interface AuthDialogPropsInterface extends DialogProps {
+    setOpenDialog: (state: SetStateAction<boolean>) => void
+}
+
+
+const AuthDialog = (props: AuthDialogPropsInterface) => {
+    const {setOpenDialog} = props;
+
     return <Dialog {...props}
-                TransitionComponent={Transition}
-                aria-describedby="alert-dialog-slide-description"
+                   TransitionComponent={Transition}
+                   aria-describedby="alert-dialog-slide-description"
                    fullWidth
+                   maxWidth="sm"
             >
-            <LoginForm setOpen={setOpen}/>
+            <LoginForm setOpenDialog={setOpenDialog}/>
         </Dialog>
 
 }
