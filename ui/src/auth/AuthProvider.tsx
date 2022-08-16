@@ -21,7 +21,10 @@ export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element =
 
     useEffect(() => {
         AuthService.getCurrentUser()
-            .then((user) => setUser(user))
+            .then((user) => {
+                setUser(user)
+                if (error) setError(null);
+            })
             .catch((_error) => {
             })
             .finally(() => setLoadingInitial(false));
@@ -34,9 +37,10 @@ export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element =
         return AuthService.login(payload)
             .then((user) => {
                 setUser(user);
+                if (error) setError(null);
 
             })
-            .catch((error) => setError(error))
+            .catch((error) => setError(error.response.data.error))
             .finally(() => setLoading(false));
     }
 
@@ -45,7 +49,8 @@ export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element =
 
         return AuthService.register(data)
             .then((user) => {
-                setUser(user);
+                setUser(user)
+                if (error) setError(null);
             })
             .catch((error) => setError(error))
             .finally(() => setLoading(false));
