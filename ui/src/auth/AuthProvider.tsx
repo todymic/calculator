@@ -12,12 +12,6 @@ export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element =
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingInitial, setLoadingInitial] = useState<boolean>(true);
 
-    const location = useLocation();
-
-    // If we change page, reset the error state.
-    useEffect(() => {
-        if (error) setError(null);
-    }, [location.pathname]);
 
     useEffect(() => {
         AuthService.getCurrentUser()
