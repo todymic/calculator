@@ -14,9 +14,15 @@ import {InputInterface, ResultInterface} from "../types/Calcul.Interface";
 import AuthDialog from "../components/layout/AuthDialog";
 import useAuth from "../auth/AuthProvider";
 import {Notification} from "../components/tool/Notification";
+import {SnackbarOrigin} from "@mui/material/Snackbar/Snackbar";
+
+const origin: SnackbarOrigin = {
+    vertical: 'bottom',
+    horizontal: 'center',
+}
 
 const Calculator = () => {
-    const { user, loading, error, signUp, logout } = useAuth();
+    const {user} = useAuth();
     const [result, setResult] = useState<ResultInterface | string>('');
     const [input, setInput] = useState<string>('0');
     const [ans, setAns] = useState<string>('');
@@ -30,7 +36,7 @@ const Calculator = () => {
 
     // Alert State
     const [alertOpen, setAlertOpen] = useState<boolean>(false);
-    const [messageAlert, setMessageAlert] = useState<string|null>(null);
+    const [message, setMessage] = useState<string | null>(null);
 
     // The pads represantation
     const pad = [
@@ -42,7 +48,7 @@ const Calculator = () => {
     ];
 
     const operator = ['+', '-', '×', '÷'];
-    const sign = ['%', '(', ')', 'AC', 'CE'];
+    const unavailableOperator = ['%', '(', ')'];
     const ACCE = ['AC', 'CE'];
 
 
@@ -153,72 +159,76 @@ const Calculator = () => {
 
     }
 
+    /**
+     * Handle click on every numeric buttons
+     * @param value
+     */
     const onClickPad = (value: string) => {
 
-        if (!sign.includes(value)) {
+        memoryResult();
 
-            memoryResult();
+        setClearBtn('CE');
 
-            setClearBtn('CE');
+        let oldInput = input ? input : '0';
 
-            let oldInput = input ? input : '0';
+        let newInput = value;
 
-            let newInput = value;
+        if (oldInput !== '0' && !isEqualClicked) // reset input screen after click on equal OR
+        {
+            const letters = oldInput.split(' ');
+            const lastLetter = letters[letters.length - 1];
+            const beforeLastLetter = letters[letters.length - 2];
 
-            if (oldInput !== '0' && !isEqualClicked) // reset input screen after click on equal OR
-            {
-                const letters = oldInput.split(' ');
-                const lastLetter = letters[letters.length - 1];
-                const beforeLastLetter = letters[letters.length - 2];
+            let space = ' ';
 
-                let space = ' ';
+            // exemple input: 4 x 0 ===> lastLetter = 0 and input's length = 3
+            if (letters.length > 1 && lastLetter === '0') {
 
-                // exemple input: 4 x 0 ===> lastLetter = 0 and input's length = 3
-                if (letters.length > 1 && lastLetter === '0') {
-
-                    if (value === '0') { // don't repeat 0 if it's at the beginning of input
-                        newInput = oldInput;
-                    } else {
-                        // replace the 0 with the value :
-                        // eg : input= '3 x 0' and value = 1,  3 x 0 ===> 3 x 1
-                        letters.pop()
-                        newInput = letters.join(' ') + space + value;
-                    }
-
+                if (value === '0') { // don't repeat 0 if it's at the beginning of input
+                    newInput = oldInput;
                 } else {
-
-                    // no space for a negative OR float number OR integer
-                    if (isNumber(lastLetter)
-                        || lastLetter === '.'
-                        || oldInput === '-'
-                        || (operator.includes(beforeLastLetter) && lastLetter === '-')) // NEG num
-                    {
-                        space = ''
-                    }
-
-                    newInput = oldInput + space + value;
+                    // replace the 0 with the value :
+                    // eg : input= '3 x 0' and value = 1,  3 x 0 ===> 3 x 1
+                    letters.pop()
+                    newInput = letters.join(' ') + space + value;
                 }
 
+            } else {
 
-                // it's already a float number, put the flag ON to prevent another .
-                if (lastLetter.indexOf('.') > -1) {
-                    setIsDotClicked(true);
+                // no space for a negative OR float number OR integer
+                if (isNumber(lastLetter)
+                    || lastLetter === '.'
+                    || oldInput === '-'
+                    || (operator.includes(beforeLastLetter) && lastLetter === '-')) // NEG num
+                {
+                    space = ''
                 }
+
+                newInput = oldInput + space + value;
             }
 
-            setInput(newInput)
 
-        } else {
-            // display alert for parentheis and percentage
-
-            showAlert(value + ' will be available soon. Please wait...');
-            setIsDotClicked(false);
+            // it's already a float number, put the flag ON to prevent another .
+            if (lastLetter.indexOf('.') > -1) {
+                setIsDotClicked(true);
+            }
         }
+
+        setInput(newInput);
 
         setIsEqualClicked(false);
 
     }
 
+    const onClickUnavaibleButton = (value: string) => {
+        showAlert(value + ' will be available soon. Please wait...');
+        setIsDotClicked(false);
+        setIsEqualClicked(false);
+    }
+
+    /**
+     * Handle click on Cancel/Clear Button (AC,C)
+     */
     const onClickClearBtn = (value: string) => {
 
         if (value === 'AC') { //reset button
@@ -248,6 +258,9 @@ const Calculator = () => {
         }
     }
 
+    /**
+     * Handle click on Operator buttons (+,-,*,/)
+     */
     const onClickOperator = (value: string) => {
         setClearBtn('CE')
 
@@ -308,6 +321,9 @@ const Calculator = () => {
         setIsDotClicked(false);
     }
 
+    /**
+     * Handle click on '.' button
+     */
     const onClickDecimal = () => {
         if (!isDotClicked) {
 
@@ -342,37 +358,60 @@ const Calculator = () => {
         setIsDotClicked(true);
     }
 
+    /**
+     * check if value is number
+     * @param value
+     */
     const isNumber = (value: string | number) => {
         return ((value != null)
             && (value !== '')
             && !isNaN(Number(value.toString())));
-    };
+    }
 
+
+    /**
+     * Notification component
+     * showAlert
+     * @param message
+     */
     const showAlert = (message: string) => {
 
         setAlertOpen(true);
-        setMessageAlert(message)
+        setMessage(message)
     };
 
-    let handleClose = () => {
-        setOpen(false);
-    };
-
+    /**
+     * Notification component
+     * handleAlertClose
+     * @param event
+     * @param reason
+     */
     const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
-
         setAlertOpen(false);
     };
 
-    return (
 
+    /**
+     * AuthDialog component
+     * Handle onClose event
+     * @param message
+     */
+    let handleClose = () => {
+        setOpen(false);
+    };
+
+
+
+    return (
         <div className="calculator-wrapper">
-            <AuthDialog open={open} onClose={handleClose} setOpen={setOpen} />
-            <Notification  open={alertOpen}
-                           onClose={handleAlertClose}
-                           messageAlert={messageAlert}
+            <AuthDialog open={open} onClose={handleClose} setOpenDialog={setOpen}/>
+            <Notification open={alertOpen}
+                          onClose={handleAlertClose}
+                          message={message}
+                          origin={origin}
             />
             <Wrapper>
                 <ScreenBox>
@@ -392,7 +431,7 @@ const Calculator = () => {
                                             ? 'btn-operator'
                                             : ACCE.includes(btn)
                                                 ? 'btn-clear'
-                                                : sign.includes(btn)
+                                                : unavailableOperator.includes(btn)
                                                     ? 'btn-sign'
                                                     : 'btn-number'
                                     }
@@ -404,7 +443,9 @@ const Calculator = () => {
                                                 ? onClickDecimal.bind(this)
                                                 : ACCE.includes(btn)
                                                     ? onClickClearBtn.bind(this, clearBtn)
-                                                    : onClickPad.bind(this, btn)}
+                                                    : unavailableOperator.includes(btn)
+                                                        ? onClickUnavaibleButton.bind(this, btn)
+                                                        : onClickPad.bind(this, btn)}
 
                                 />
                             })}

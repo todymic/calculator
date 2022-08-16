@@ -1,6 +1,6 @@
-import {Snackbar} from "@mui/material";
-import React from "react";
-import {SnackbarOrigin} from "@mui/material/Snackbar/Snackbar";
+import {AlertColor, Snackbar} from "@mui/material";
+import React, {FC} from "react";
+import {SnackbarCloseReason, SnackbarOrigin} from "@mui/material/Snackbar/Snackbar";
 import MuiAlert, {AlertProps} from "@mui/material/Alert";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
@@ -10,20 +10,26 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export const Notification = (props: any) => {
-    const origin: SnackbarOrigin = {
-        vertical: 'bottom',
-        horizontal: 'center',
-    }
+interface NotificationProps {
+    open: boolean,
+    onClose: (event: React.SyntheticEvent<any> | Event, reason: SnackbarCloseReason) => void,
+    message: string | null,
+    origin?: SnackbarOrigin,
+    type?: AlertColor
+}
+
+export const Notification = (props: NotificationProps) => {
+    const {open, onClose, message, origin, type} = props;
+
     return (
         <Snackbar
-            open={props.open}
-            onClose={props.onClose}
-            autoHideDuration={2000}
+            open={open}
+            onClose={onClose}
+            autoHideDuration={5000}
             anchorOrigin={origin}
         >
-            <Alert severity="success" sx={{width: '100%'}}>
-                {props.messageAlert}
+            <Alert severity={type} sx={{width: '100%'}}>
+                {message}
             </Alert>
         </Snackbar>
     )
