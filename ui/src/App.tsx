@@ -1,6 +1,5 @@
 import './App.css';
 import React from 'react';
-import 'react-notifications-component/dist/theme.css';
 
 
 import Calculator from "./pages/Calculator";

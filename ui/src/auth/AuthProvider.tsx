@@ -46,7 +46,7 @@ export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element =
                 setUser(user)
                 if (error) setError(null);
             })
-            .catch((error) => setError(error))
+            .catch((error) => setError(error.response.data.error))
             .finally(() => setLoading(false));
     }
 

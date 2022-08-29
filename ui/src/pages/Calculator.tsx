@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import 'react-notifications-component/dist/theme.css';
 
 
 import Wrapper from '../components/wrapper/Wrapper';
@@ -407,11 +406,11 @@ const Calculator = () => {
 
     return (
         <div className="calculator-wrapper">
-            <AuthDialog open={open} onClose={handleClose} setOpenDialog={setOpen}/>
+            <AuthDialog open={open} onClose={handleClose} />
             <Notification open={alertOpen}
-                          onClose={handleAlertClose}
                           message={message}
                           origin={origin}
+                          onClose={handleAlertClose}
             />
             <Wrapper>
                 <ScreenBox>

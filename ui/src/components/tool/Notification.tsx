@@ -19,14 +19,18 @@ interface NotificationProps {
 }
 
 export const Notification = (props: NotificationProps) => {
-    const {open, onClose, message, origin, type} = props;
+
+    const {open, message, origin, type, onClose} = props;
+
+
 
     return (
         <Snackbar
             open={open}
-            onClose={onClose}
-            autoHideDuration={5000}
+            autoHideDuration={2000}
             anchorOrigin={origin}
+            onClose={onClose}
+
         >
             <Alert severity={type} sx={{width: '100%'}}>
                 {message}

@@ -22,7 +22,7 @@ const getCurrentUser = async (): Promise<UserInterface> => {
     return response.data
 }
 
-const register = async (data: IRegisterForm) => {
+const register = async (data: IRegisterForm): Promise<UserInterface> => {
     const response = await Client.post<any>("/register", data);
     return response.data
 };
