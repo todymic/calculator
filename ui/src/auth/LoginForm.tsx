@@ -1,5 +1,4 @@
 import {
-    AlertColor,
     Box,
     Button,
     DialogContent,
@@ -7,21 +6,19 @@ import {
     Grid,
     TextField
 } from "@mui/material";
-import React, {SetStateAction, useState} from "react";
-import useAuth from "../../auth/AuthProvider";
-import {ILoginForm} from "../../services/Auth.service";
-import {Notification} from "../tool/Notification";
+import React, {useState} from "react";
+import useAuth from "./AuthProvider";
+import {ILoginForm} from "../services/Auth.service";
+import {useAppDispatch} from "../redux/Hook";
+import {open} from "../redux/AlertSlice";
 
-export interface LoginFormProposInterface {
-    setOpenDialog: (state: SetStateAction<boolean>) => void
-}
-export const LoginForm = ({setOpenDialog}: LoginFormProposInterface) => {
-    const [alertOpen, setAlertOpen] = useState<boolean>(false);
+export const LoginForm = () => {
+    const dispatch = useAppDispatch()
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const {loading, error, login} = useAuth();
+    const {loading, login} = useAuth();
 
     /**
      * Get Input data value and Submit form and closeOpen
@@ -33,7 +30,7 @@ export const LoginForm = ({setOpenDialog}: LoginFormProposInterface) => {
         }
         login(payload);
 
-        setAlertOpen(true);
+        dispatch(open('Login Successfull'));
     }
 
     const handleEmailChange = (value: string) => {
@@ -44,26 +41,10 @@ export const LoginForm = ({setOpenDialog}: LoginFormProposInterface) => {
         setPassword(password)
     }
 
-    /**
-     * Notification component
-     * handleAlertClose
-     * @param event
-     * @param reason
-     */
-    const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setAlertOpen(false);
-    };
+
 
     return (
         <Box>
-            <Notification open={ !loading && alertOpen } onClose={handleAlertClose} message={error ? error : "successfully logged!"} origin={{
-                vertical: 'top',
-                horizontal: 'center',
-            }} type={ error ? "error" : "success" }></Notification>
-
             <DialogTitle textAlign="center" sx={{ m: 0, p: 2 }}>Login</DialogTitle>
             <DialogContent dividers>
                 <Grid container
@@ -100,7 +81,6 @@ export const LoginForm = ({setOpenDialog}: LoginFormProposInterface) => {
 
                 </Grid>
             </DialogContent>
-
         </Box>
     )
 }
