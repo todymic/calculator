@@ -1,11 +1,12 @@
 import {configureStore} from '@reduxjs/toolkit'
 import alertReducer from "./AlertSlice";
+import screenReducer from "./ScreenSlice";
 
 
 export const store = configureStore({
     reducer: {
         alert: alertReducer,
-        // users: usersReducer,
+        screen: screenReducer,
     },
 })
 

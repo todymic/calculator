@@ -14,6 +14,8 @@ import AuthDialog from "../components/layout/AuthDialog";
 import useAuth from "../auth/AuthProvider";
 import {Notification} from "../components/tool/Notification";
 import {SnackbarOrigin} from "@mui/material/Snackbar/Snackbar";
+import {useAppDispatch, useAppSelector} from "../redux/Hook";
+import {inputScreen, resultScreen, ansScreen, setFormattedInput} from "../redux/ScreenSlice";
 
 const origin: SnackbarOrigin = {
     vertical: 'bottom',
@@ -22,16 +24,17 @@ const origin: SnackbarOrigin = {
 
 const Calculator = () => {
     const {user} = useAuth();
-    const [result, setResult] = useState<ResultInterface | string>('');
-    const [input, setInput] = useState<string>('0');
-    const [ans, setAns] = useState<string>('');
+    const dispatch = useAppDispatch()
+    const screen = useAppSelector(state => state.screen);
+
+    const {result, input, ans} = screen;
     const [clearBtn, setClearBtn] = useState<string>('AC');
     const [resultChanged, setResultChanged] = useState<boolean>(false);
     const [isDotClicked, setIsDotClicked] = useState<boolean>(false);
     const [isEqualClicked, setIsEqualClicked] = useState<boolean>(false);
 
     //Dialog State
-    const [open, setOpen] = useState<boolean>(false);
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
     // Alert State
     const [alertOpen, setAlertOpen] = useState<boolean>(false);
@@ -73,9 +76,12 @@ const Calculator = () => {
                 "input": formattedInput
             }
 
-            const token = user!.apiToken ?? ''
+            dispatch(setFormattedInput(data))
+
+            const token = user!.apiToken ?? '';
+
             CalculatorService.getResult(data, token)
-                .then(
+                .then(  // get result if user logged
                     (result) => {
 
                         const inputResult: string = input.replace(/\*/g, '×').replace(/\//g, '÷').replace(/\.0 /g, '. ');
@@ -84,27 +90,29 @@ const Calculator = () => {
                             setInput(result.data.result);
                         }
 
-                        setResult('')
-                        setAns(inputResult)
+                        setResult('');
+
+                        setAns(inputResult);
 
                         setTimeout(() => {
                             setResultChanged(true);
                         });
                     }
+
                 ).catch((error: AxiosError) => {
 
+                    // if user undefined, open Login/register form in modal
+                    if (error.response?.status === 401) {
+                        setDialogOpen(true)
+                    } else {
 
-                // if 401,modal
-                if (error.response?.status === 401) {
-                    setOpen(true)
-                } else {
-                    setInput('Error');
-                    setResult('')
+                        setInput('Error');
+                        setResult('');
 
-                    setTimeout(() => {
-                        setResultChanged(true);
-                    });
-                }
+                        setTimeout(() => {
+                            setResultChanged(true);
+                        });
+                    }
 
             })
 
@@ -129,6 +137,7 @@ const Calculator = () => {
 
     };
 
+
     /**
      * Handle the text above the screen result
      * @param resultArg
@@ -141,6 +150,17 @@ const Calculator = () => {
         setAns(ansArg);
 
         setInput(inputArg)
+    }
+
+    const setInput = (input: string) => {
+        dispatch(inputScreen(input))
+    }
+
+    const setResult = (result: ResultInterface | string) => {
+        dispatch(resultScreen(result))
+    }
+    const setAns = (ans: string) => {
+        dispatch(ansScreen(ans))
     }
 
     /**
@@ -398,15 +418,13 @@ const Calculator = () => {
      * Handle onClose event
      * @param message
      */
-    let handleClose = () => {
-        setOpen(false);
+    const handleDialogClose = () => {
+        setDialogOpen(false);
     };
-
-
 
     return (
         <div className="calculator-wrapper">
-            <AuthDialog open={open} onClose={handleClose} />
+            <AuthDialog open={dialogOpen} onClose={handleDialogClose} setDialogOpen={setDialogOpen}/>
             <Notification open={alertOpen}
                           message={message}
                           origin={origin}

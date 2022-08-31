@@ -1,4 +1,4 @@
-import React, {SetStateAction, useState} from "react";
+import React, {SetStateAction, useMemo, useState} from "react";
 import {Dialog, DialogProps} from "@mui/material";
 import {LoginForm} from "../../auth/LoginForm";
 import Slide from '@mui/material/Slide';
@@ -7,7 +7,7 @@ import RegisterForm from "../../auth/RegisterForm";
 import {Notification} from "../tool/Notification";
 import useAuth from "../../auth/AuthProvider";
 import {useAppDispatch, useAppSelector} from "../../redux/Hook";
-import {close} from "../../redux/AlertSlice";
+import {closeAlert} from "../../redux/AlertSlice";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -18,18 +18,26 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+export interface AuthDialogProps extends DialogProps {
+    setDialogOpen: (state: SetStateAction<boolean>) => void
+}
 
-const AuthDialog = (props: DialogProps) => {
+const AuthDialog = (props: AuthDialogProps) => {
+
+    const {open, setDialogOpen} = props;
 
     const dispatch = useAppDispatch()
+    const {loading, error, user} = useAuth();
 
     const alert = useAppSelector(state => state.alert);
 
-    const {loading, error} = useAuth();
-
-    const handleClose = () => {
-        dispatch(close());
+    const handleAlertClose = () => {
+        dispatch(closeAlert());
     };
+
+    const handleDialogClose = () => {
+        setDialogOpen(false)
+    }
 
     return (
         <>
@@ -39,16 +47,17 @@ const AuthDialog = (props: DialogProps) => {
                               vertical: 'top',
                               horizontal: 'center',
                           }} type={error ? "error" : "success"}
-                          onClose={handleClose}
+                          onClose={handleAlertClose}
             ></Notification>
             <Dialog {...props}
                     TransitionComponent={Transition}
                     aria-describedby="alert-dialog-slide-description"
                     fullWidth
                     maxWidth="sm"
+                    onClose={handleDialogClose}
             >
-                <LoginForm/>
-                <RegisterForm/>
+                <LoginForm open={open} setDialogOpen={setDialogOpen}/>
+                <RegisterForm open={open} setDialogOpen={setDialogOpen}/>
             </Dialog>
         </>
     )
