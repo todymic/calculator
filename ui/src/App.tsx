@@ -6,25 +6,26 @@ import Calculator from "./pages/Calculator";
 import {Route, Routes} from 'react-router';
 import {MainContainer} from "./components/layout/MainContainer";
 import {AuthProvider} from "./auth/AuthProvider";
+import Profile from "./pages/Profile";
 
 
 const App = () => {
 
     return (
-        <Routes>
-            <Route path="/" element={<MainContainer/>}>
-                <Route index element={
-                    <AuthProvider>
+        <AuthProvider>
+            <Routes>
+                <Route path="/" element={<MainContainer/>}>
+                    <Route index element={
                         <Calculator/>
-                    </AuthProvider>
-                }/>
-                <Route path="users">
-                    <Route path=":id">
-                        {/*<Route index element={<Profile />} />*/}
+                    }/>
+                    <Route path="users">
+                        <Route path=":id">
+                            <Route index element={<Profile />} />
+                        </Route>
                     </Route>
                 </Route>
-            </Route>
-        </Routes>
+            </Routes>
+        </AuthProvider>
     );
 }
 
