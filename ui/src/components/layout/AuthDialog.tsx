@@ -1,9 +1,9 @@
 import React, {SetStateAction, useMemo, useState} from "react";
 import {Dialog, DialogProps} from "@mui/material";
-import {LoginForm} from "../../auth/LoginForm";
+import {Login} from "../../auth/Login";
+import {Register} from "../../auth/Register";
 import Slide from '@mui/material/Slide';
 import {TransitionProps} from '@mui/material/transitions';
-import RegisterForm from "../../auth/RegisterForm";
 import {Notification} from "../tool/Notification";
 import useAuth from "../../auth/AuthProvider";
 import {useAppDispatch, useAppSelector} from "../../redux/Hook";
@@ -27,9 +27,12 @@ const AuthDialog = (props: AuthDialogProps) => {
     const {open, setDialogOpen} = props;
 
     const dispatch = useAppDispatch()
-    const {loading, error, user} = useAuth();
+    const {loading, error} = useAuth();
 
     const alert = useAppSelector(state => state.alert);
+    const loginStep = useAppSelector(state => state.login);
+
+    const {signUp, signIn} = loginStep;
 
     const handleAlertClose = () => {
         dispatch(closeAlert());
@@ -56,8 +59,9 @@ const AuthDialog = (props: AuthDialogProps) => {
                     maxWidth="sm"
                     onClose={handleDialogClose}
             >
-                <LoginForm open={open} setDialogOpen={setDialogOpen}/>
-                <RegisterForm open={open} setDialogOpen={setDialogOpen}/>
+                { signIn && <Login open={open} setDialogOpen={setDialogOpen}/> }
+                { signUp && <Register open={open} setDialogOpen={setDialogOpen}/> }
+
             </Dialog>
         </>
     )
