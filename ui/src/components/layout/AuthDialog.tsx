@@ -42,12 +42,14 @@ const AuthDialog = (props: AuthDialogProps) => {
         setDialogOpen(false)
     }
 
+
+
     return (
         <>
             <Notification open={!loading && alert.isOpen}
                           message={error ? error : alert.message}
                           origin={{
-                              vertical: 'top',
+                              vertical: 'bottom',
                               horizontal: 'center',
                           }} type={error ? "error" : "success"}
                           onClose={handleAlertClose}

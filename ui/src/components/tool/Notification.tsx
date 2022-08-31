@@ -27,7 +27,7 @@ export const Notification = (props: NotificationProps) => {
     return (
         <Snackbar
             open={open}
-            autoHideDuration={2000}
+            autoHideDuration={4000}
             anchorOrigin={origin}
             onClose={onClose}
 

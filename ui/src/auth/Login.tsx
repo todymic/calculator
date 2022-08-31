@@ -1,6 +1,3 @@
-import {createTheme} from '@mui/material/styles';
-
-
 import React, {useState} from "react";
 import useAuth from "./AuthProvider";
 import {ILoginForm} from "../services/Auth.service";
@@ -9,6 +6,7 @@ import {openAlert} from "../redux/AlertSlice";
 import {AuthDialogProps} from "../components/layout/AuthDialog";
 import {signUpForm} from "../redux/LoginSlice";
 import {LoginForm} from "../components/layout/LoginForm";
+import * as Helper from "../utils/Helper";
 
 export const Login = (props: AuthDialogProps) => {
 
@@ -18,7 +16,7 @@ export const Login = (props: AuthDialogProps) => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const {login} = useAuth();
+    const {login, loading, user} = useAuth();
 
     /**
      * Get Input data value and Submit form and closeOpen
@@ -32,6 +30,12 @@ export const Login = (props: AuthDialogProps) => {
         login(payload);
 
         dispatch(openAlert('Login Successfull'));
+    }
+
+
+
+    if(!loading && !Helper.isEmpty(user)) {
+        setDialogOpen(false)
     }
 
     const signUp = () => {
