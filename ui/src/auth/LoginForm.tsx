@@ -9,16 +9,23 @@ import {
 import React, {useState} from "react";
 import useAuth from "./AuthProvider";
 import {ILoginForm} from "../services/Auth.service";
-import {useAppDispatch} from "../redux/Hook";
-import {open} from "../redux/AlertSlice";
+import {useAppDispatch, useAppSelector} from "../redux/Hook";
+import {openAlert} from "../redux/AlertSlice";
+import {AuthDialogProps} from "../components/layout/AuthDialog";
+import *  as Helper from "../utils/Helper";
+import CalculatorService from "../services/Calculator.service";
 
-export const LoginForm = () => {
+
+export const LoginForm = (props: AuthDialogProps) => {
+
+    const screen = useAppSelector(state => state.screen);
+    const {setDialogOpen} = props
     const dispatch = useAppDispatch()
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const {loading, login} = useAuth();
+    const {user, login} = useAuth();
 
     /**
      * Get Input data value and Submit form and closeOpen
@@ -30,7 +37,7 @@ export const LoginForm = () => {
         }
         login(payload);
 
-        dispatch(open('Login Successfull'));
+        dispatch(openAlert('Login Successfull'));
     }
 
     const handleEmailChange = (value: string) => {
@@ -41,18 +48,20 @@ export const LoginForm = () => {
         setPassword(password)
     }
 
-
+    if (!Helper.isEmpty(user)) {
+        CalculatorService.calculRequest(user, screen)
+    }
 
     return (
         <Box>
-            <DialogTitle textAlign="center" sx={{ m: 0, p: 2 }}>Login</DialogTitle>
+            <DialogTitle textAlign="center" sx={{m: 0, p: 2}}>Login</DialogTitle>
             <DialogContent dividers>
                 <Grid container
                       spacing={3}
                       direction={"column"}
                       justifyContent="center"
                 >
-                    <Grid item xs={8} >
+                    <Grid item xs={8}>
                         <TextField
                             autoFocus
                             required
@@ -63,7 +72,7 @@ export const LoginForm = () => {
                             fullWidth
                             onChange={e => handleEmailChange(e.target.value)}/>
                     </Grid>
-                    <Grid item xs={8} >
+                    <Grid item xs={8}>
                         <TextField
                             fullWidth
                             id="password"

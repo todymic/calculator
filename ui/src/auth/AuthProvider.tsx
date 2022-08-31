@@ -1,6 +1,5 @@
 import {ReactNode, useState, useEffect, useMemo, useContext} from 'react';
 import AuthContext from './AuthContext'
-import {useLocation, useNavigate} from "react-router-dom";
 import {UserInterface} from "../types/User.interface";
 import AuthService, {ILoginForm, IRegisterForm} from "../services/Auth.service";
 
@@ -8,7 +7,7 @@ import AuthService, {ILoginForm, IRegisterForm} from "../services/Auth.service";
 export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element => {
 
     const [user, setUser] = useState<UserInterface|undefined>({} as UserInterface);
-    const [error, setError] = useState<any>();
+    const [error, setError] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingInitial, setLoadingInitial] = useState<boolean>(true);
 
