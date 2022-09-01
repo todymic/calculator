@@ -17,9 +17,16 @@ const login = async (payload: ILoginForm): Promise<UserInterface> => {
     return response.data.user
 };
 
-const getCurrentUser = async (): Promise<UserInterface> => {
-    const response = await Client.get(`/users/me`);
-    return response.data
+const getCurrentUser = (): UserInterface|undefined => {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) as UserInterface : undefined;
+
+    // const response = await Client.get(`/users/me`, {
+    //     headers: {
+    //         'Authorization': `Bearer ${currentUser?.apiToken}`
+    //     }
+    // });
+
 }
 
 const register = async (data: IRegisterForm): Promise<UserInterface> => {

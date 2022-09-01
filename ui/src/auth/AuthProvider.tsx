@@ -13,14 +13,8 @@ export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element =
 
 
     useEffect(() => {
-        AuthService.getCurrentUser()
-            .then((user) => {
-                setUser(user)
-                if (error) setError(null);
-            })
-            .catch((_error) => {
-            })
-            .finally(() => setLoadingInitial(false));
+        setUser(AuthService.getCurrentUser());
+        setLoadingInitial(false)
     }, []);
 
 
@@ -28,8 +22,9 @@ export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element =
         setLoading(true);
 
         return AuthService.login(payload)
-            .then((user) => {
+            .then((user: UserInterface) => {
                 setUser(user);
+                localStorage.setItem('user', JSON.stringify(user))
                 if (error) setError(null);
 
             })
@@ -43,6 +38,7 @@ export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element =
         return AuthService.register(data)
             .then((user) => {
                 setUser(user)
+                localStorage.setItem('user', JSON.stringify(user))
                 if (error) setError(null);
             })
             .catch((error) => setError(error.response.data.error))
@@ -51,6 +47,7 @@ export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element =
 
     const logout = () => {
         setUser({});
+        localStorage.removeItem('user')
     }
 
     const memoedValue = useMemo(() => ({

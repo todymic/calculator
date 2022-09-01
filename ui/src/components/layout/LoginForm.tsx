@@ -25,8 +25,6 @@ export const LoginForm = (props: LoginFormProps) => {
     const screen = useAppSelector(state => state.screen);
     const {title, onSubmitForm, linkText, goToForm, setEmail, setPassword, labelSubmitBtn} = props;
 
-    const {user} = useAuth();
-
     const handleEmailChange = (value: string) => {
         setEmail(value)
     }
@@ -35,9 +33,7 @@ export const LoginForm = (props: LoginFormProps) => {
         setPassword(password)
     }
 
-    if (!Helper.isEmpty(user)) {
-        CalculatorService.calculRequest(user, screen)
-    }
+    CalculatorService.calculRequest(screen)
 
   return (
       <ThemeProvider theme={theme}>

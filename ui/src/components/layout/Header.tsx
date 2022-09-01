@@ -1,6 +1,5 @@
 import {
     AppBar,
-    Avatar,
     Box, Button,
     Container,
     IconButton,
@@ -17,6 +16,7 @@ import {useNavigate} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../redux/Hook";
 import {reset} from "../../redux/ScreenSlice";
 import AuthDialog from "./AuthDialog";
+import * as Helper from "../../utils/Helper";
 
 const settings = [
     'Profile',
@@ -40,11 +40,6 @@ const Header = () => {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
-
-    const isEmpty = (object: Object | undefined) => {
-        for (let i in object) return false;
-        return true;
-    }
 
     /**
      * Logout and return to Calculator page
@@ -86,7 +81,7 @@ const Header = () => {
         setDialogOpen(false);
     };
 
-
+    console.log(!Helper.isEmpty(user));
     return (
         <>
             <AppBar position="static">
@@ -115,7 +110,7 @@ const Header = () => {
                         </Typography>
                         <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}></Box>
                         <Box sx={{flexGrow: 0}}>
-                            {!isEmpty(user) ? (
+                            {!Helper.isEmpty(user) ? (
                                 <>
                                     <Button color="inherit" onClick={handleOpenUserMenu}>{user!.email}</Button>
                                     <Menu

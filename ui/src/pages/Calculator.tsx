@@ -78,9 +78,7 @@ const Calculator = () => {
 
             dispatch(setFormattedInput(data))
 
-            const token = user!.apiToken ?? '';
-
-            CalculatorService.getResult(data, token)
+            CalculatorService.getResult(data)
                 .then(  // get result if user logged
                     (result) => {
 
