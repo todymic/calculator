@@ -7,37 +7,35 @@ use App\Manager\UserManager;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\View\View;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/users', name: 'app_user')]
-#[isGranted('IS_AUTHENTICATED_FULLY')]
 class UserController extends AbstractController
 {
-    use ControllerTrait;
 
     public function __construct(private readonly UserManager $userManager)
     {
     }
 
-    #[Get('/{id}', name: 'profil', requirements: ['id' => "\d+"])]
-    #[ParamConverter('user', class: User::class)]
-    public function getProfile(User $user): View
+    #[Route('/{id}', name: 'profil', requirements: ['id' => "\d+"], methods: ['GET'])]
+    public function getProfile(UserInterface $user): Response
     {
         $serializedUser = $this->userManager->serializeUser($user, [AbstractNormalizer::GROUPS => 'get_user']);
 
-        return $this->view($serializedUser);
+        return $this->json($serializedUser);
     }
 
     #[Route('/me', name: 'app_me', methods: 'GET')]
-    public function getCurrentUser(): View
+    public function getCurrentUser(?UserInterface $user): Response
     {
-        $serializedUser = $this->userManager->serializeUser($this->getUser(), [AbstractNormalizer::GROUPS => 'get_user']);
+        $serializedUser = $this->userManager->serializeUser($user, [AbstractNormalizer::GROUPS => 'get_user']);
 
-        return $this->view($serializedUser);
+        return $this->json($serializedUser);
     }
 }
