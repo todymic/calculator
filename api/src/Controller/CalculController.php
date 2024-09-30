@@ -17,8 +17,8 @@ class CalculController extends AbstractController
     #[Route('/calcul', name: 'app_calcul', methods: ['POST'])]
     public function index(Request $request, Calculator $calculator): Response
     {
-
-        $input = $request->request->get('input');
+        $params = json_decode($request->getContent(), true);
+        $input =$params['input'];
         try {
             $result = $calculator->execute($input);
 
