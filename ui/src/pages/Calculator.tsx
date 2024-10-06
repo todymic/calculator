@@ -11,7 +11,6 @@ import CalculatorService from "../services/Calculator.service";
 import {AxiosError} from "axios";
 import {InputInterface, ResultInterface} from "../types/Calcul.Interface";
 import AuthDialog from "../components/layout/AuthDialog";
-import useAuth from "../auth/AuthProvider";
 import {Notification} from "../components/tool/Notification";
 import {SnackbarOrigin} from "@mui/material/Snackbar/Snackbar";
 import {useAppDispatch, useAppSelector} from "../redux/Hook";
@@ -23,7 +22,6 @@ const origin: SnackbarOrigin = {
 }
 
 const Calculator = () => {
-    const {user} = useAuth();
     const dispatch = useAppDispatch()
     const screen = useAppSelector(state => state.screen);
 
@@ -51,7 +49,7 @@ const Calculator = () => {
 
     const operator = ['+', '-', '×', '÷'];
     const unavailableOperator = ['%', '(', ')'];
-    const ACCE = ['AC', 'CE'];
+    const   ACCE = ['AC', 'CE'];
 
 
     /*
@@ -80,24 +78,38 @@ const Calculator = () => {
 
             CalculatorService.getResult(data)
                 .then(  // get result if user logged
-                    (result) => {
+                    async (result) => {
+                        console.log(result.status)
+                        if(result.status === 201) {
+                            let response = await result.json();
+                            console.log(response)
 
-                        const inputResult: string = input.replace(/\*/g, '×').replace(/\//g, '÷').replace(/\.0 /g, '. ');
 
-                        if (result.data.result) {
-                            setInput(result.data.result);
+                            const inputResult: string = input.replace(/\*/g, '×').replace(/\//g, '÷').replace(/\.0 /g, '. ');
+
+                            if (response.result) {
+                                setInput(response.result);
+                            }
+
+                            setResult('');
+
+                            setAns(inputResult);
+
+                            setTimeout(() => {
+                                setResultChanged(true);
+                            });
+                        } else {
+                            let error =  new AxiosError()
+                            error.response = result;
+
+                            throw error;
                         }
 
-                        setResult('');
-
-                        setAns(inputResult);
-
-                        setTimeout(() => {
-                            setResultChanged(true);
-                        });
                     }
 
                 ).catch((error: AxiosError) => {
+
+                console.log(error)
 
                     // if user undefined, open Login/register form in modal
                     if (error.response?.status === 401) {

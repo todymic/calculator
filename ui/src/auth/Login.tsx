@@ -16,7 +16,7 @@ export const Login = (props: AuthDialogProps) => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const {login, loading, user} = useAuth();
+    const {login, loading, user, error} = useAuth();
 
     /**
      * Get Input data value and Submit form and closeOpen
@@ -29,7 +29,12 @@ export const Login = (props: AuthDialogProps) => {
         }
         login(payload);
 
-        dispatch(openAlert('Login Successfull'));
+        if(!error) {
+            dispatch(openAlert('Login Successfull'));
+        } else {
+            dispatch(openAlert('Login Error'));
+        }
+
     }
 
 

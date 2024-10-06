@@ -1,19 +1,21 @@
-import Client from "../utils/HttpClient";
-import {InputInterface, ResultInterface} from "../types/Calcul.Interface";
-import {AxiosError, AxiosResponse} from "axios";
-import {ansScreen, inputScreen, resultScreen, ScreenValue} from "../redux/ScreenSlice";
-import {store} from "../redux/Store";
+import { InputInterface } from "../types/Calcul.Interface";
+import { ansScreen, inputScreen, resultScreen, ScreenValue } from "../redux/ScreenSlice";
+import { store } from "../redux/Store";
 
-const getResult = async (input: InputInterface): Promise<AxiosResponse<ResultInterface>> => {
+const getResult = async ( input: InputInterface ): Promise<any> => {
 
     const user = localStorage.getItem('user');
     const currentUser = user ? JSON.parse(user) : null;
 
-    return await Client.post<ResultInterface>(`/calcul`, input, {
+    return await fetch(process.env.REACT_APP_API_URL + "/calcul", {
+        method: "POST",
         headers: {
+            "Content-Type": "application/json",
             'Authorization': `Bearer ${currentUser?.apiToken}`
-        }
+        },
+        body: JSON.stringify(input)
     });
+
 };
 
 
@@ -24,19 +26,27 @@ const calculRequest = (screen: ScreenValue) => {
         const {input, formattedInput} = screen;
         CalculatorService.getResult(formattedInput)
             .then(  // get result if user logged
-                (response) =>  {
+                async (res) =>  {
+                    if(res.status === 201) {
 
-                    const inputResult: string = input.replace(/\*/g, '×').replace(/\//g, '÷').replace(/\.0 /g, '. ');
+                        let response = await res.json();
 
-                    if (response.data.result) {
-                        store.dispatch(inputScreen(response.data.result));
+                        const inputResult: string = input.replace(/\*/g, '×').replace(/\//g, '÷').replace(/\.0 /g, '. ');
+
+                        if (response.result) {
+                            store.dispatch(inputScreen(response.result));
+                        }
+
+                        store.dispatch(resultScreen(''));
+                        store.dispatch(ansScreen(inputResult));
+
                     }
 
-                    store.dispatch(resultScreen(''));
-                    store.dispatch(ansScreen(inputResult));
+
+
                 }
             )
-            .catch((error: AxiosError) => {
+            .catch(() => {
 
                 store.dispatch(inputScreen('Error'));
                 store.dispatch(resultScreen(''));

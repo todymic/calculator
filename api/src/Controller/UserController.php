@@ -2,17 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Manager\UserManager;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\ControllerTrait;
-use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 #[Route('/users', name: 'app_user')]

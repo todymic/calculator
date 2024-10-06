@@ -23,9 +23,13 @@ export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element =
 
         return AuthService.login(payload)
             .then((user: UserInterface) => {
-                setUser(user);
-                localStorage.setItem('user', JSON.stringify(user))
-                if (error) setError(null);
+
+                if (error) {
+                    setError(null)
+                } else {
+                    setUser(user)
+                    localStorage.setItem('user', JSON.stringify(user))
+                }
 
             })
             .catch((error) => setError(error.response.data.error))
@@ -37,9 +41,14 @@ export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element =
 
         return AuthService.register(data)
             .then((user) => {
-                setUser(user)
-                localStorage.setItem('user', JSON.stringify(user))
-                if (error) setError(null);
+
+                if (error) {
+                    setError(null)
+                } else {
+                    setUser(user)
+                    localStorage.setItem('user', JSON.stringify(user))
+                }
+
             })
             .catch((error) => setError(error.response.data.error))
             .finally(() => setLoading(false));

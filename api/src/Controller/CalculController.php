@@ -18,7 +18,7 @@ class CalculController extends AbstractController
     public function index(Request $request, Calculator $calculator): Response
     {
         $params = json_decode($request->getContent(), true);
-        $input =$params['input'];
+        $input = $params['input'];
         try {
             $result = $calculator->execute($input);
 
